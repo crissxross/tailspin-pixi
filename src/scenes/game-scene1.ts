@@ -1,4 +1,4 @@
-import { Container, DisplayObject, Sprite, Texture } from 'pixi.js';
+import { Container, DisplayObject, Sprite } from 'pixi.js';
 import { sound } from "@pixi/sound";
 import { IScene, SceneManager } from '../shared/scene-manager';
 import { GameScene2 } from './game-scene2';
@@ -14,8 +14,6 @@ PixiPlugin.registerPIXI({
 export class GameScene1 extends Container implements IScene {
     sky: Sprite;
     innerEar: Sprite;
-    innerEarSVGtexture!: Texture;
-    innerEarSVG!: Sprite;
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
@@ -30,14 +28,13 @@ export class GameScene1 extends Container implements IScene {
         this.sky.position.y = parentHeight*0.5;
         this.sky.alpha = 0;
 
-        // PNG VERSION
         this.innerEar = Sprite.from("innerEar");
         this.innerEar.anchor.set(0.5);
         // size of innerEar.png is 695x511 therefore its aspect ratio is 0.735:1
         this.innerEar.width = Math.min(parentWidth*0.8, 1389);
         this.innerEar.height = Math.min(parentWidth*0.8, 1389) * 0.735;
         this.innerEar.position.x = parentWidth*0.5;
-        this.innerEar.position.y = parentHeight*0.7;
+        this.innerEar.position.y = parentHeight*0.5;
         this.innerEar.alpha = 0.5;
 
         this.innerEar.eventMode = 'static';
@@ -51,25 +48,7 @@ export class GameScene1 extends Container implements IScene {
 
         this.addChild(this.innerEar);
 
-        this.addInnerEarSVG(parentWidth, parentHeight);
-
         this.animate();
-    }
-
-    addInnerEarSVG(parentWidth: number, parentHeight:number): void {
-        // TODO: SVG VERSION does not work well
-        this.innerEarSVGtexture = Texture.from("innerEarSVG");
-        if (this.innerEarSVGtexture) {
-            this.innerEarSVG = new Sprite(this.innerEarSVGtexture);
-            this.innerEarSVG.anchor.set(0.5);
-            // size of innerEarSVG viewbox is 0 0 693.88 509.14 therefore its aspect ratio is 0.734:1
-            this.innerEarSVG.width = Math.min(parentWidth*0.8, 694);
-            this.innerEarSVG.height = Math.min(parentWidth*0.8, 694) * 0.735;
-            this.innerEarSVG.position.x = parentWidth*0.5;
-            this.innerEarSVG.position.y = parentHeight*0.25;
-
-            this.addChild(this.innerEarSVG);
-        }
     }
 
     animate(): void {
