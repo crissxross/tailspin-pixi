@@ -25,13 +25,14 @@ export class LoaderScene extends Container implements IScene {
     async initLoader(): Promise<void> {
         await Assets.init({manifest: manifest});
         const bundlesIds = manifest.bundles.map(bundle => bundle.name);
-        // await Assets.loadBundle(bundlesIds, this.downloadProgress.bind(this));
-        await Assets.loadBundle(bundlesIds);
+        await Assets.loadBundle(bundlesIds, this.downloadProgress.bind(this));
+        // await Assets.loadBundle(bundlesIds);
     }
 
-    // private downloadProgress(progressRatio: number): void {
-    //     this._loadingBar.scaleProgress(progressRatio);
-    // }
+    private downloadProgress(progressRatio: number): void {
+        console.log('download progress', progressRatio);
+        // this._loadingBar.scaleProgress(progressRatio);
+    }
 
     private loaded(): void {
         SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height));

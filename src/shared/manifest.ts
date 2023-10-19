@@ -13,6 +13,8 @@ export const manifest: AssetsManifest = {
             name : "images",
             assets: {
                 "sky" : "images/sky.png",
+                "innerEar": "images/innerEar@2x.png",
+                "innerEarSVG": "images/innerEar.svg",
             }
         },
         {
