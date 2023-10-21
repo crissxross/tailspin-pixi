@@ -1,6 +1,6 @@
 import { SceneManager } from './shared/scene-manager';
 import { LoaderScene } from './scenes/loader-scene';
-import { FILL_COLOR } from './shared/constants';
+import { FILL_COLOR } from './config/constants';
 
 SceneManager.init(FILL_COLOR, 0);
 

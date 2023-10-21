@@ -2,7 +2,7 @@ import { Container, Assets } from 'pixi.js'
 // import { LoadingBarContainer } from '../containers/loading-bar-container';
 import { SceneManager, IScene } from '../shared/scene-manager';
 import { GameScene1 } from './game-scene1';
-import { manifest } from '../shared/manifest';
+import { manifest } from '../config/manifest';
 import { gsap } from "gsap";
 
 // TODO: commented out _loadingBar stuff because it's buggy. Using a simple CSS loading spinner instead
