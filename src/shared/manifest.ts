@@ -1,31 +1,33 @@
 import type { AssetsManifest } from "pixi.js";
 
+// TODO: group assets by scene
+
 export const manifest: AssetsManifest = {
     bundles: [
         {
             name: "logo",
             assets: {
-                "viteLogo": "logo/vite.svg",
-                "pixiLogo": "logo/pixi.svg",
+                "viteLogo": "assets/logo/vite.svg",
+                "pixiLogo": "assets/logo/pixi.svg",
             }
         },
         {
             name : "images",
             assets: {
-                "sky" : "images/sky.png",
-                "innerEar": "images/innerEar@2x.png",
+                "sky" : "assets/sky.png",
+                "innerEar": "assets/innerEar@2x.png",
             }
         },
         {
             name: "spritesheets",
             assets: {
-                "explosions": "spritesheets/explosions.json",
+                "explosions": "assets/spritesheets/explosions.json",
             }
         },
         {
-            name: "sound",
+            name: "sounds",
             assets: {
-                "tinkling-chimes" : "sound/TinklingChimes.mp3",
+                "tinkling-chimes" : "assets/sounds/TinklingChimes.mp3",
             }
         }
     ]
