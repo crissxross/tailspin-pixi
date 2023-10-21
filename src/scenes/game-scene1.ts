@@ -17,18 +17,18 @@ export class GameScene1 extends Container implements IScene {
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
-
-        //you can remove all of this code
         //initialize sprites
-        this.sky = Sprite.from("sky");
-        this.sky.anchor.set(0.5);
-        this.sky.width = parentWidth;
-        this.sky.height = parentHeight;
-        this.sky.position.x = parentWidth*0.5;
-        this.sky.position.y = parentHeight*0.5;
-        this.sky.alpha = 0;
-
         this.innerEar = Sprite.from("innerEar");
+        this.sky = Sprite.from("sky");
+        // add sprites & content, etc.
+        this.addInnerEar(parentWidth, parentHeight);
+        // TODO: do I need sky in this scene?
+        // this.addSky(parentWidth, parentHeight);
+
+        this.animate();
+    }
+
+    addInnerEar(parentWidth: number, parentHeight: number): void {
         this.innerEar.anchor.set(0.5);
         // size of innerEar.png is 695x511 therefore its aspect ratio is 0.735:1
         this.innerEar.width = Math.min(parentWidth*0.8, 1389);
@@ -42,13 +42,20 @@ export class GameScene1 extends Container implements IScene {
 
         this.innerEar.on('pointerdown', () => {
             sound.play("tinkling-chimes");
-            // console.log('clicked');
             SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
         });
 
         this.addChild(this.innerEar);
+    }
 
-        this.animate();
+    addSky(parentWidth: number, parentHeight: number): void {
+        this.sky.anchor.set(0.5);
+        this.sky.width = parentWidth;
+        this.sky.height = parentHeight;
+        this.sky.position.x = parentWidth*0.5;
+        this.sky.position.y = parentHeight*0.5;
+        this.sky.alpha = 0;
+        this.addChild(this.sky);
     }
 
     animate(): void {

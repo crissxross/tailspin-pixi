@@ -4,22 +4,46 @@ import { GameScene1 } from './game-scene1';
 
 export class GameScene2 extends Container implements IScene {
     sky: Sprite;
-    text: Text;
     explosion: AnimatedSprite;
     explosionTextures: Texture[] = [];
+    text!: Text;
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
-
-        //you can remove all of this code
         //initialize sprites
         this.sky = Sprite.from("sky");
+        for (let i = 1; i < 28; i++) {
+            const texture = Texture.from(`Explosion_Sequence_A ${i}.png`);
+            this.explosionTextures.push(texture)
+        }
+        this.explosion = new AnimatedSprite(this.explosionTextures);
+
+        // add sprites & content, etc.
+        this.addSky(parentWidth, parentHeight);
+        this.addExplosion(parentWidth, parentHeight);
+        this.addText(parentWidth, parentHeight);
+    }
+
+    addSky(parentWidth: number, parentHeight: number): void {
         this.sky.anchor.set(0.5);
         this.sky.width = parentWidth;
         this.sky.height = parentHeight;
         this.sky.position.x = parentWidth * 0.5;
         this.sky.position.y = parentHeight * 0.5;
+        this.addChild(this.sky);
+    }
 
+    addExplosion(parentWidth: number, parentHeight: number): void {
+        this.explosion.anchor.set(0.5);
+        this.explosion.position.x = parentWidth * 0.5;
+        this.explosion.position.y = parentHeight * 0.75;
+        this.explosion.loop = false;
+        this.explosion.animationSpeed = 0.3;
+        this.addChild(this.explosion);
+        this.explosion.play();
+    }
+
+    addText(parentWidth: number, parentHeight: number): void {
         const style = new TextStyle({
             fontFamily: "system-ui",
             fontSize: 30,
@@ -51,20 +75,7 @@ export class GameScene2 extends Container implements IScene {
         this.text.cursor = 'pointer';
         this.text.on('pointerdown', () => { SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height)); });
 
-        for (let i = 1; i < 28; i++) {
-            const texture = Texture.from(`Explosion_Sequence_A ${i}.png`);
-            this.explosionTextures.push(texture)
-        }
-        this.explosion = new AnimatedSprite(this.explosionTextures);
-        this.explosion.anchor.set(0.5);
-        this.explosion.position.x = parentWidth * 0.5;
-        this.explosion.position.y = parentHeight * 0.75;
-        this.explosion.loop = false;
-        this.explosion.animationSpeed = 0.3;
-        this.explosion.play();
-
-        this.addChild(this.sky, this.text, this.explosion);
-
+        this.addChild(this.text);
     }
 
     update(framesPassed: number): void {
