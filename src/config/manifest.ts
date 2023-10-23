@@ -29,6 +29,12 @@ export const manifest: AssetsManifest = {
             assets: {
                 "tinkling-chimes" : "assets/sounds/TinklingChimes.mp3",
             }
+        },
+        {
+            name: "storytext",
+            assets: {
+                "storytext": "assets/tailspinScenes.json",
+            }
         }
     ]
 }
