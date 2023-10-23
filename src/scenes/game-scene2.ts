@@ -1,4 +1,6 @@
 import { AnimatedSprite, Container, Sprite, Text, TextStyle, Texture } from 'pixi.js';
+import { gsap } from "gsap";
+// import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
 import { GameScene1 } from './game-scene1';
 
@@ -30,7 +32,12 @@ export class GameScene2 extends Container implements IScene {
         this.sky.height = parentHeight;
         this.sky.position.x = parentWidth * 0.5;
         this.sky.position.y = parentHeight * 0.5;
+        this.sky.alpha = 0;
         this.addChild(this.sky);
+        gsap.to(this.sky, {
+            pixi: { alpha: 1 },
+            duration: 1,
+        });
     }
 
     addExplosion(parentWidth: number, parentHeight: number): void {

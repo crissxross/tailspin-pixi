@@ -1,9 +1,12 @@
-import { Container, DisplayObject, Sprite } from 'pixi.js';
+import { Container, DisplayObject, Graphics, Sprite } from 'pixi.js';
 import { sound } from "@pixi/sound";
-import { IScene, SceneManager } from '../shared/scene-manager';
-import { GameScene2 } from './game-scene2';
+import { ButtonContainer } from "@pixi/ui";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
+import { IScene, SceneManager } from '../shared/scene-manager';
+import { GameScene2 } from './game-scene2';
+import { StoryButton } from '../components/story-button';
+
 
 gsap.registerPlugin(PixiPlugin);
 
@@ -14,6 +17,8 @@ PixiPlugin.registerPIXI({
 export class GameScene1 extends Container implements IScene {
     sky: Sprite;
     innerEar: Sprite;
+    testButton: ButtonContainer;
+    storyButton: StoryButton;
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
@@ -25,7 +30,33 @@ export class GameScene1 extends Container implements IScene {
         // TODO: do I need sky in this scene?
         // this.addSky(parentWidth, parentHeight);
 
-        this.animate();
+        this.rotate(this.innerEar);
+
+        this.storyButton = new StoryButton('story1', this.innerEar, this.activateStory);
+        this.storyButton.position.set(parentWidth*0.75, parentHeight*0.2);
+        this.addChild(this.storyButton);
+
+
+        this.testButton = new ButtonContainer(
+            new Graphics()
+                .beginFill('hsl(20 40% 80% / 0.5)')
+                .drawCircle(0, 0, 40)
+        );
+        this.testButton.position.set(parentWidth*0.25, parentHeight*0.2);
+        this.addChild(this.testButton);
+        this.testButton.onPress.connect(() => {
+            this.rotate(this.innerEar);
+            console.log('onPress');
+        });
+
+    }
+
+    activateStory(fragment: String, sprite: Sprite): void {
+        console.log('activateStory', fragment);
+        gsap.to(sprite, {
+            pixi: { rotation: '+= 180' },
+            duration: 1
+        });
     }
 
     addInnerEar(parentWidth: number, parentHeight: number): void {
@@ -58,16 +89,12 @@ export class GameScene1 extends Container implements IScene {
         this.addChild(this.sky);
     }
 
-    animate(): void {
-        gsap.to(this.innerEar, {
-            pixi: { rotation: 360 },
+    rotate(sprite: Sprite) {
+        console.log('rotate');
+        gsap.to(sprite, {
+            pixi: { rotation: '+= 360' },
             duration: 2
         });
-
-        // gsap.to(this.sky, {
-        //     pixi: { alpha: 1 },
-        //     duration: 4, delay: 2
-        // });
     }
 
     update(framesPassed: number): void {
