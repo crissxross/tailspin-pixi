@@ -3,7 +3,7 @@ import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
-import { Fragment, StoryScene } from '../shared/story-model';
+import { ConfigFragment, Fragment, StoryScene } from '../shared/story-model';
 import { GameScene2 } from './game-scene2';
 import { StoryButton } from '../components/story-button';
 
@@ -14,30 +14,35 @@ PixiPlugin.registerPIXI({
 });
 
 export class GameScene1 extends Container implements IScene {
-    sky: Sprite;
     innerEar: Sprite;
-    storyButton: StoryButton;
+    storyButton!: StoryButton;
     sceneData!: StoryScene;
     fragment!: Fragment;
     fragText!: Text;
+    configFragment!: ConfigFragment;
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
         //initialize content
         this.innerEar = Sprite.from("innerEar");
-        this.sky = Sprite.from("sky");
 
         Assets.load('assets/tailspinScenes.json').then((data) => {
-            this.sceneData = data[0];
-            this.addSceneData();
-            // console.log('this.sceneData: ', this.sceneData);
+            this.sceneData = data[0]; // scene 1
+            this.init(parentWidth, parentHeight);
         });
+    }
 
-        this.storyButton = new StoryButton(this.fragText, this.innerEar, this.activateStory);
-
+    init(parentWidth: number, parentHeight: number): void {
+        this.addSceneData();
         this.addInnerEar(parentWidth, parentHeight);
-        // TODO: do I need sky in this scene?
-        // this.addSky(parentWidth, parentHeight);
+
+        this.configFragment = {
+            id: this.fragment.id,
+            fragText: this.fragText,
+            sprite: this.innerEar,
+        }
+
+        this.storyButton = new StoryButton(this.configFragment, this.activateFragment);
         this.addStoryButton(parentWidth, parentHeight);
 
         this.rotate(this.innerEar);
@@ -52,7 +57,7 @@ export class GameScene1 extends Container implements IScene {
         this.fragment = this.sceneData.fragments[0];
         this.fragText = new Text(this.fragment.text);
         this.fragText.position.set(50, 100);
-        this.fragText.alpha = 0.5;
+        this.fragText.alpha = 0;
         this.addChild(this.fragText);
     }
 
@@ -61,14 +66,13 @@ export class GameScene1 extends Container implements IScene {
         this.addChild(this.storyButton);
     }
 
-    activateStory(fragText: Text, sprite: Sprite): void {
-        console.log('activate fragText', fragText);
-        gsap.to(sprite, {
+    activateFragment(config: ConfigFragment): void {
+        console.log('activate fragText id:', config.id, '-', config.fragText.text);
+        gsap.to(config.sprite, {
             pixi: { rotation: '+= 180' },
             duration: 1
         });
-        // FIXME: fragText is undefined here
-        gsap.to(fragText, {
+        gsap.to(config.fragText, {
             pixi: { alpha: 1 },
             duration: 1,
         });
@@ -94,16 +98,6 @@ export class GameScene1 extends Container implements IScene {
         this.addChild(this.innerEar);
     }
 
-    addSky(parentWidth: number, parentHeight: number): void {
-        this.sky.anchor.set(0.5);
-        this.sky.width = parentWidth;
-        this.sky.height = parentHeight;
-        this.sky.position.x = parentWidth*0.5;
-        this.sky.position.y = parentHeight*0.5;
-        this.sky.alpha = 0;
-        this.addChild(this.sky);
-    }
-
     rotate(sprite: Sprite) {
         // console.log('rotate');
         gsap.to(sprite, {
@@ -118,9 +112,6 @@ export class GameScene1 extends Container implements IScene {
 
     resize(parentWidth: number, parentHeight: number): void {
         // TODO: why doesn't this resize anything?
-
-        this.sky.width = parentWidth;
-        this.sky.height = parentHeight;
 
         this.innerEar.position.x = parentWidth*0.5;
         this.innerEar.position.y = parentHeight*0.5;

@@ -1,3 +1,5 @@
+import { Sprite, Text } from "pixi.js";
+
 export interface Story {
   scenes: StoryScene[];
 }
@@ -12,4 +14,10 @@ export interface Fragment {
   text: string;
   animation?: string;
   sound?: string;
+}
+
+export interface ConfigFragment {
+  id: string;
+  fragText: Text;
+  sprite: Sprite;
 }

@@ -1,13 +1,13 @@
 import { ButtonContainer } from "@pixi/ui";
-import { Container, Graphics, Sprite, Text } from "pixi.js";
+import { Container, Graphics } from "pixi.js";
+import { ConfigFragment } from "../shared/story-model";
 
 export class StoryButton extends Container  {
   button: ButtonContainer;
 
   constructor(
-    fragText: Text,
-    sprite: Sprite,
-    onclick: (fragText: Text, sprite: Sprite) => void
+    configFragment: ConfigFragment,
+    onclick: (configFragment: ConfigFragment) => void
   ) {
     super();
 
@@ -19,7 +19,7 @@ export class StoryButton extends Container  {
 
   this.button.onPress.connect(() => {
     console.log('onPress');
-    onclick(fragText, sprite);
+    onclick(configFragment);
   });
 
   this.addChild(this.button);
