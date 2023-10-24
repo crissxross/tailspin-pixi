@@ -1,7 +1,5 @@
 import type { AssetsManifest } from "pixi.js";
 
-// TODO: group assets by scene
-
 export const manifest: AssetsManifest = {
     bundles: [
         {
@@ -12,28 +10,25 @@ export const manifest: AssetsManifest = {
             }
         },
         {
-            name : "images",
+            name: "loader-scene",
             assets: {
-                "sky" : "assets/sky.png",
-                "innerEar": "assets/innerEar@2x.png",
+                // "loadingSpinner": "assets/loading-spinner.svg",
             }
         },
         {
-            name: "spritesheets",
-            assets: {
-                "explosions": "assets/spritesheets/explosions.json",
-            }
-        },
-        {
-            name: "sounds",
-            assets: {
-                "tinkling-chimes" : "assets/sounds/TinklingChimes.mp3",
-            }
-        },
-        {
-            name: "storytext",
+            name: "game-scene1",
             assets: {
                 "storytext": "assets/tailspinScenes.json",
+                "innerEar": "assets/innerEar@2x.png",
+                "tinkling-chimes": "assets/sounds/TinklingChimes.mp3",
+            }
+        },
+        {
+            name: "game-scene2",
+            assets: {
+                "storytext": "assets/tailspinScenes.json",
+                "sky" : "assets/sky.png",
+                "explosions": "assets/spritesheets/explosions.json",
             }
         }
     ]
