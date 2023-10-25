@@ -27,7 +27,7 @@ export class GameScene1 extends Container implements IScene {
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
-        //initialize/load content
+
         this.innerEar = Sprite.from("innerEar");
 
         for (let i = 0; i < 6; i++) {
@@ -56,6 +56,8 @@ export class GameScene1 extends Container implements IScene {
             id: this.fragment.id,
             fragText: this.fragText,
             sprite: this.innerEar,
+            animatedSprites: [this.mint, this.purrl],
+            sounds: ["tinkling-chimes"]
         }
 
         this.storyButton = new StoryButton(this.configFragment, this.activateFragment);
@@ -86,11 +88,24 @@ export class GameScene1 extends Container implements IScene {
     }
 
     activateFragment(config: ConfigFragment) {
-        // console.log('activate fragText id:', config.id, '-', config.fragText.text);
-        gsap.to(config.sprite, {
-            pixi: { rotation: '+= 180' },
-            duration: 1
-        });
+        if (config.sprite) {
+            gsap.to(config.sprite, {
+                pixi: { rotation: '+= 180' },
+                duration: 1
+            });
+        }
+        if (config.animatedSprites) {
+            gsap.to(config.animatedSprites, {
+                pixi: { alpha: 1 },
+                duration: 2,
+                stagger: 0.5,
+            });
+            config.animatedSprites.forEach(sprite => sprite.play());
+        }
+        if (config.sounds) {
+            config.sounds.forEach(s => sound.play(s));
+        }
+        console.log('activate fragText id:', config.id, '-', config.fragText.text);
         gsap.to(config.fragText, {
             pixi: { alpha: 1 },
             duration: 1,
@@ -103,8 +118,9 @@ export class GameScene1 extends Container implements IScene {
         this.mint.position.y = parentHeight * 0.75;
         this.mint.loop = true;
         this.mint.animationSpeed = 0.2;
+        this.mint.alpha = 0;
         this.addChild(this.mint);
-        this.mint.play();
+        // this.mint.play();
     }
 
     addPurrl(parentWidth: number, parentHeight: number) {
@@ -113,8 +129,9 @@ export class GameScene1 extends Container implements IScene {
         this.purrl.position.y = parentHeight * 0.75;
         this.purrl.loop = true;
         this.purrl.animationSpeed = 0.2;
+        this.purrl.alpha = 0;
         this.addChild(this.purrl);
-        this.purrl.play();
+        // this.purrl.play();
     }
 
     addInnerEar(parentWidth: number, parentHeight: number) {
@@ -130,10 +147,9 @@ export class GameScene1 extends Container implements IScene {
         this.innerEar.cursor = 'pointer';
 
         this.innerEar.on('pointerdown', () => {
-            sound.play("tinkling-chimes");
             SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
+            // sound.play("tinkling-chimes");
         });
-
         this.addChild(this.innerEar);
     }
 

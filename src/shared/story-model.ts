@@ -1,4 +1,4 @@
-import { Sprite, Text } from "pixi.js";
+import { AnimatedSprite, Sprite, Text } from "pixi.js";
 
 export interface Story {
   scenes: StoryScene[];
@@ -19,5 +19,7 @@ export interface Fragment {
 export interface ConfigFragment {
   id: string;
   fragText: Text;
-  sprite: Sprite;
+  sprite?: Sprite;
+  animatedSprites?: AnimatedSprite[];
+  sounds?: string[]
 }
