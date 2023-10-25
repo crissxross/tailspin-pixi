@@ -26,7 +26,7 @@ export class GameScene2 extends Container implements IScene {
         this.addText(parentWidth, parentHeight);
     }
 
-    addSky(parentWidth: number, parentHeight: number): void {
+    addSky(parentWidth: number, parentHeight: number) {
         this.sky.anchor.set(0.5);
         this.sky.width = parentWidth;
         this.sky.height = parentHeight;
@@ -40,7 +40,7 @@ export class GameScene2 extends Container implements IScene {
         });
     }
 
-    addExplosion(parentWidth: number, parentHeight: number): void {
+    addExplosion(parentWidth: number, parentHeight: number) {
         this.explosion.anchor.set(0.5);
         this.explosion.position.x = parentWidth * 0.5;
         this.explosion.position.y = parentHeight * 0.75;
@@ -50,7 +50,7 @@ export class GameScene2 extends Container implements IScene {
         this.explosion.play();
     }
 
-    addText(parentWidth: number, parentHeight: number): void {
+    addText(parentWidth: number, parentHeight: number) {
         const style = new TextStyle({
             fontFamily: "system-ui",
             fontSize: 30,
@@ -85,11 +85,11 @@ export class GameScene2 extends Container implements IScene {
         this.addChild(this.text);
     }
 
-    update(framesPassed: number): void {
+    update(framesPassed: number) {
         // console.log('update framesPassed: ', framesPassed);
     }
 
-    resize(parentWidth: number, parentHeight: number): void {
+    resize(parentWidth: number, parentHeight: number) {
         // TODO: why doesn't this resize anything?
 
         this.sky.width = parentWidth;

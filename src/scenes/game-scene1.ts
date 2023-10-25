@@ -32,7 +32,7 @@ export class GameScene1 extends Container implements IScene {
         });
     }
 
-    init(parentWidth: number, parentHeight: number): void {
+    init(parentWidth: number, parentHeight: number) {
         this.addSceneData();
         this.addInnerEar(parentWidth, parentHeight);
 
@@ -48,7 +48,7 @@ export class GameScene1 extends Container implements IScene {
         this.rotate(this.innerEar);
     }
 
-    addSceneData(): void {
+    addSceneData() {
         console.log('scene', this.sceneData.scene);
         this.sceneData.fragments.forEach((fragment: Fragment) => {
             console.log(`${fragment.id} - ${fragment.text}`);
@@ -61,12 +61,12 @@ export class GameScene1 extends Container implements IScene {
         this.addChild(this.fragText);
     }
 
-    addStoryButton(parentWidth: number, parentHeight: number): void {
+    addStoryButton(parentWidth: number, parentHeight: number) {
         this.storyButton.position.set(parentWidth*0.75, parentHeight*0.2);
         this.addChild(this.storyButton);
     }
 
-    activateFragment(config: ConfigFragment): void {
+    activateFragment(config: ConfigFragment) {
         console.log('activate fragText id:', config.id, '-', config.fragText.text);
         gsap.to(config.sprite, {
             pixi: { rotation: '+= 180' },
@@ -78,7 +78,7 @@ export class GameScene1 extends Container implements IScene {
         });
     }
 
-    addInnerEar(parentWidth: number, parentHeight: number): void {
+    addInnerEar(parentWidth: number, parentHeight: number) {
         this.innerEar.anchor.set(0.5);
         // size of innerEar.png is 695x511 therefore its aspect ratio is 0.735:1
         this.innerEar.width = Math.min(parentWidth*0.8, 1389);
@@ -106,11 +106,11 @@ export class GameScene1 extends Container implements IScene {
         });
     }
 
-    update(framesPassed: number): void {
+    update(framesPassed: number) {
         // console.log('update framesPassed: ', framesPassed);
     }
 
-    resize(parentWidth: number, parentHeight: number): void {
+    resize(parentWidth: number, parentHeight: number) {
         // TODO: why doesn't this resize anything?
 
         this.innerEar.position.x = parentWidth*0.5;

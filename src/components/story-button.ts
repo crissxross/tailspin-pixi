@@ -13,7 +13,7 @@ export class StoryButton extends Container  {
 
     this.button = new ButtonContainer(
     new Graphics()
-        .beginFill('hsl(200 40% 80% / 0.5)')
+        .beginFill('hsl(204 30% 70% / 0.4)')
         .drawCircle(0, 0, 40)
   );
 
