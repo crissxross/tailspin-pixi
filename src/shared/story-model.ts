@@ -6,10 +6,10 @@ export interface Story {
 
 export interface StoryScene {
   scene: number;
-  fragments: Fragment[];
+  fragments: FragmentData[];
 }
 
-export interface Fragment {
+export interface FragmentData {
   id: string;
   text: string;
   animation?: string;

@@ -3,7 +3,7 @@ import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
-import { ConfigFragment, Fragment, StoryScene } from '../shared/story-model';
+import { ConfigFragment, FragmentData, StoryScene } from '../shared/story-model';
 import { GameScene2 } from './game-scene2';
 import { StoryButton } from '../components/story-button';
 
@@ -17,7 +17,7 @@ export class GameScene1 extends Container implements IScene {
     innerEar: Sprite;
     storyButton!: StoryButton;
     sceneData!: StoryScene;
-    fragment!: Fragment;
+    fragData!: FragmentData;
     fragText!: Text;
     configFragment!: ConfigFragment;
     mint: AnimatedSprite;
@@ -53,7 +53,7 @@ export class GameScene1 extends Container implements IScene {
         this.addInnerEar(parentWidth, parentHeight);
 
         this.configFragment = {
-            id: this.fragment.id,
+            id: this.fragData.id,
             fragText: this.fragText,
             sprite: this.innerEar,
             animatedSprites: [this.mint, this.purrl],
@@ -70,13 +70,13 @@ export class GameScene1 extends Container implements IScene {
     }
 
     addSceneData() {
-        console.log('scene', this.sceneData.scene);
-        this.sceneData.fragments.forEach((fragment: Fragment) => {
-            // console.log(`${fragment.id} - ${fragment.text}`);
+        console.log('scene number', this.sceneData.scene);
+        this.sceneData.fragments.forEach((fragment: FragmentData) => {
+            console.log(`${fragment.id} - ${fragment.text}`);
         });
 
-        this.fragment = this.sceneData.fragments[0];
-        this.fragText = new Text(this.fragment.text);
+        this.fragData = this.sceneData.fragments[0];
+        this.fragText = new Text(this.fragData.text);
         this.fragText.position.set(50, 100);
         this.fragText.alpha = 0;
         this.addChild(this.fragText);
