@@ -6,24 +6,47 @@ import { GameScene1 } from './game-scene1';
 
 export class GameScene2 extends Container implements IScene {
     sky: Sprite;
+    mint: AnimatedSprite;
+    mintTextures: Texture[] = [];
     explosion: AnimatedSprite;
     explosionTextures: Texture[] = [];
     text!: Text;
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
-        //initialize sprites
+        // initialize/load content
         this.sky = Sprite.from("sky");
+
+        for (let i = 0; i < 6; i++) {
+            const texture = Texture.from(`Mint000${i}`);
+            this.mintTextures.push(texture)
+        }
+        this.mint = new AnimatedSprite(this.mintTextures);
+
         for (let i = 1; i < 28; i++) {
             const texture = Texture.from(`Explosion_Sequence_A ${i}.png`);
             this.explosionTextures.push(texture)
         }
         this.explosion = new AnimatedSprite(this.explosionTextures);
 
-        // add sprites & content, etc.
+        this.init(parentWidth, parentHeight);
+    }
+
+    init(parentWidth: number, parentHeight: number) {
         this.addSky(parentWidth, parentHeight);
         this.addExplosion(parentWidth, parentHeight);
+        this.addMint(parentWidth, parentHeight);
         this.addText(parentWidth, parentHeight);
+    }
+
+    addMint(parentWidth: number, parentHeight: number) {
+        this.mint.anchor.set(0.5);
+        this.mint.position.x = parentWidth * 0.15;
+        this.mint.position.y = parentHeight * 0.5;
+        this.mint.loop = true;
+        this.mint.animationSpeed = 0.2;
+        this.addChild(this.mint);
+        this.mint.play();
     }
 
     addSky(parentWidth: number, parentHeight: number) {

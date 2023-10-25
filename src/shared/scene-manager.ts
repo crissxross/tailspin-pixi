@@ -18,7 +18,7 @@ export class SceneManager {
         SceneManager._app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
             resizeTo: window,
-	        resolution: window.devicePixelRatio || 1,
+            resolution: window.devicePixelRatio || 1,
             autoDensity: true,
             backgroundColor: bgColor,
             backgroundAlpha: bgAlpha,

@@ -20,6 +20,7 @@ export const manifest: AssetsManifest = {
             assets: {
                 "storytext": "assets/tailspinScenes.json",
                 "innerEar": "assets/innerEar@2x.png",
+                "animalcrossing": "assets/spritesheets/animalcrossing.json",
                 "tinkling-chimes": "assets/sounds/TinklingChimes.mp3",
             }
         },
@@ -28,6 +29,7 @@ export const manifest: AssetsManifest = {
             assets: {
                 "storytext": "assets/tailspinScenes.json",
                 "sky" : "assets/sky.png",
+                "animalcrossing": "assets/spritesheets/animalcrossing.json",
                 "explosions": "assets/spritesheets/explosions.json",
             }
         }

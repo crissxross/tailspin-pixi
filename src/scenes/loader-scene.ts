@@ -1,4 +1,4 @@
-import { Container, Assets } from 'pixi.js'
+import { Container, Assets, utils } from 'pixi.js'
 // import { LoadingBarContainer } from '../containers/loading-bar-container';
 import { SceneManager, IScene } from '../shared/scene-manager';
 import { GameScene1 } from './game-scene1';
@@ -12,6 +12,8 @@ export class LoaderScene extends Container implements IScene {
 
     constructor() {
         super();
+
+        console.log('texture cache:', utils.TextureCache)
 
         // const loaderBarWidth = 280;
         // this._loadingBar = new LoadingBarContainer(loaderBarWidth, SceneManager.width, SceneManager.height);

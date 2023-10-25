@@ -1,4 +1,4 @@
-import { Assets, Container, DisplayObject, Sprite, Text } from 'pixi.js';
+import { AnimatedSprite, Assets, Container, DisplayObject, Sprite, Text, Texture } from 'pixi.js';
 import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
@@ -20,11 +20,27 @@ export class GameScene1 extends Container implements IScene {
     fragment!: Fragment;
     fragText!: Text;
     configFragment!: ConfigFragment;
+    mint: AnimatedSprite;
+    mintTextures: Texture[] = [];
+    purrl: AnimatedSprite;
+    purrlTextures: Texture[] = [];
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
-        //initialize content
+        //initialize/load content
         this.innerEar = Sprite.from("innerEar");
+
+        for (let i = 0; i < 6; i++) {
+            const texture = Texture.from(`Mint000${i}`);
+            this.mintTextures.push(texture)
+        }
+        this.mint = new AnimatedSprite(this.mintTextures);
+
+        for (let i = 0; i < 6; i++) {
+            const texture = Texture.from(`Purrl000${i}`);
+            this.purrlTextures.push(texture)
+        }
+        this.purrl = new AnimatedSprite(this.purrlTextures);
 
         Assets.load('assets/tailspinScenes.json').then((data) => {
             this.sceneData = data[0]; // scene 1
@@ -45,13 +61,16 @@ export class GameScene1 extends Container implements IScene {
         this.storyButton = new StoryButton(this.configFragment, this.activateFragment);
         this.addStoryButton(parentWidth, parentHeight);
 
+        this.addMint(parentWidth, parentHeight);
+        this.addPurrl(parentWidth, parentHeight);
+
         this.rotate(this.innerEar);
     }
 
     addSceneData() {
         console.log('scene', this.sceneData.scene);
         this.sceneData.fragments.forEach((fragment: Fragment) => {
-            console.log(`${fragment.id} - ${fragment.text}`);
+            // console.log(`${fragment.id} - ${fragment.text}`);
         });
 
         this.fragment = this.sceneData.fragments[0];
@@ -67,7 +86,7 @@ export class GameScene1 extends Container implements IScene {
     }
 
     activateFragment(config: ConfigFragment) {
-        console.log('activate fragText id:', config.id, '-', config.fragText.text);
+        // console.log('activate fragText id:', config.id, '-', config.fragText.text);
         gsap.to(config.sprite, {
             pixi: { rotation: '+= 180' },
             duration: 1
@@ -76,6 +95,26 @@ export class GameScene1 extends Container implements IScene {
             pixi: { alpha: 1 },
             duration: 1,
         });
+    }
+
+    addMint(parentWidth: number, parentHeight: number) {
+        this.mint.anchor.set(0.5);
+        this.mint.position.x = parentWidth * 0.75;
+        this.mint.position.y = parentHeight * 0.75;
+        this.mint.loop = true;
+        this.mint.animationSpeed = 0.2;
+        this.addChild(this.mint);
+        this.mint.play();
+    }
+
+    addPurrl(parentWidth: number, parentHeight: number) {
+        this.purrl.anchor.set(0.5);
+        this.purrl.position.x = parentWidth * 0.25;
+        this.purrl.position.y = parentHeight * 0.75;
+        this.purrl.loop = true;
+        this.purrl.animationSpeed = 0.2;
+        this.addChild(this.purrl);
+        this.purrl.play();
     }
 
     addInnerEar(parentWidth: number, parentHeight: number) {
