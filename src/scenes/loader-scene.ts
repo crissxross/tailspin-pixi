@@ -32,7 +32,7 @@ export class LoaderScene extends Container implements IScene {
     }
 
     private downloadProgress(progressRatio: number): void {
-        console.log('download progress', progressRatio);
+        // console.log('download progress', progressRatio);
         // this._loadingBar.scaleProgress(progressRatio);
     }
 

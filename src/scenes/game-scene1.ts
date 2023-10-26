@@ -6,6 +6,7 @@ import { IScene, SceneManager } from '../shared/scene-manager';
 import { ConfigFragment, FragmentData, StoryScene } from '../shared/story-model';
 import { GameScene2 } from './game-scene2';
 import { StoryButton } from '../components/story-button';
+import { ScenesConfig } from '../config/scenesConfig';
 
 gsap.registerPlugin(PixiPlugin);
 
@@ -51,65 +52,96 @@ export class GameScene1 extends Container implements IScene {
     init(parentWidth: number, parentHeight: number) {
         this.addSceneData();
         this.addInnerEar(parentWidth, parentHeight);
-
-        this.configFragment = {
-            id: this.fragData.id,
-            fragText: this.fragText,
-            sprite: this.innerEar,
-            animatedSprites: [this.mint, this.purrl],
-            sounds: ["tinkling-chimes"]
-        }
-
-        this.storyButton = new StoryButton(this.configFragment, this.activateFragment);
-        this.addStoryButton(parentWidth, parentHeight);
-
         this.addMint(parentWidth, parentHeight);
         this.addPurrl(parentWidth, parentHeight);
-
+        // rotate - just TESTING
         this.rotate(this.innerEar);
     }
 
     addSceneData() {
         console.log('scene number', this.sceneData.scene);
-        this.sceneData.fragments.forEach((fragment: FragmentData) => {
-            console.log(`${fragment.id} - ${fragment.text}`);
-        });
 
-        this.fragData = this.sceneData.fragments[0];
-        this.fragText = new Text(this.fragData.text);
-        this.fragText.position.set(50, 100);
-        this.fragText.alpha = 0;
-        this.addChild(this.fragText);
+        this.sceneData.fragments.forEach((fragment: FragmentData, i) => {
+            console.log(`${i}: ${fragment.id} - ${fragment.text}`);
+
+            const offsetX = 50 + i*50;
+            const offsetY = 100 + i*120;
+            const animation = this.assignAnimation(i);
+            console.log('animation for index', i, animation);
+
+            this.fragData = this.sceneData.fragments[i];
+
+            this.fragText = new Text(this.fragData.text, ScenesConfig.fragmentStyle);
+
+            this.fragText.position.set(offsetX, offsetY);
+            this.fragText.alpha = 0;
+
+            this.configFragment = {
+                index: i,
+                id: this.fragData.id,
+                fragText: this.fragText,
+                sounds: this.fragData.sounds,
+                sprite: this.innerEar,
+                animation: animation,
+                // animatedSprites: [mint, purrl],
+            }
+
+            this.addChild(this.fragText);
+
+            this.storyButton = new StoryButton(this.configFragment, this.activateFragment);
+            this.addStoryButton(offsetX, offsetY);
+        });
     }
 
-    addStoryButton(parentWidth: number, parentHeight: number) {
-        this.storyButton.position.set(parentWidth*0.75, parentHeight*0.2);
+    assignAnimation(i: number) {
+        switch (i) {
+            case 0:
+                return this.mint;
+            case 1:
+                return this.purrl;
+            // case 2:
+            //     return this.animation3;
+            // default:
+            //     this.defaultAnimation;
+        }
+    }
+
+    addStoryButton(offsetX: number, offsetY: number) {
+        this.storyButton.position.set(offsetX-40, offsetY);
         this.addChild(this.storyButton);
     }
 
     activateFragment(config: ConfigFragment) {
+        gsap.to(config.fragText, {
+            pixi: { alpha: 1 },
+            duration: 1,
+        });
+        if (config.sounds) {
+            config.sounds.forEach(s => sound.play(s));
+        }
+        if (config.animation) {
+            gsap.to(config.animation, {
+                pixi: { alpha: 1 },
+                duration: 2,
+                stagger: 0.5,
+            });
+            config.animation.play();
+        }
+        // if (config.animatedSprites) {
+            //     gsap.to(config.animatedSprites, {
+                //         pixi: { alpha: 1 },
+                //         duration: 2,
+                //         stagger: 0.5,
+                //     });
+                //     config.animatedSprites.forEach(sprite => sprite.play());
+                // }
         if (config.sprite) {
             gsap.to(config.sprite, {
                 pixi: { rotation: '+= 180' },
                 duration: 1
             });
         }
-        if (config.animatedSprites) {
-            gsap.to(config.animatedSprites, {
-                pixi: { alpha: 1 },
-                duration: 2,
-                stagger: 0.5,
-            });
-            config.animatedSprites.forEach(sprite => sprite.play());
-        }
-        if (config.sounds) {
-            config.sounds.forEach(s => sound.play(s));
-        }
-        console.log('activate fragText id:', config.id, '-', config.fragText.text);
-        gsap.to(config.fragText, {
-            pixi: { alpha: 1 },
-            duration: 1,
-        });
+        console.log(`activate fragText ${config.index}: ${config.id} - ${config.fragText.text}`);
     }
 
     addMint(parentWidth: number, parentHeight: number) {

@@ -12,14 +12,16 @@ export interface StoryScene {
 export interface FragmentData {
   id: string;
   text: string;
+  sounds?: string[];
   animation?: string;
-  sound?: string;
 }
 
 export interface ConfigFragment {
+  index: number;
   id: string;
   fragText: Text;
-  sprite?: Sprite;
-  animatedSprites?: AnimatedSprite[];
   sounds?: string[]
+  sprite?: Sprite;
+  animation: any;
+  // animatedSprites?: AnimatedSprite[];
 }

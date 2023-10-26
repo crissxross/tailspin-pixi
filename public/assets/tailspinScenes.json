@@ -4,11 +4,14 @@
     "fragments": [
       {
         "id": "g1",
-        "text": "He shouts.\nShocks them into silence."
+        "text": "He shouts.\nShocks them into silence.",
+        "sounds": ["tinkling-chimes"],
+        "animation": "purrl"
       },
       {
         "id": "g2",
-        "text": "The first time a bomb exploded, he thought he'd gone deaf in his other ear too."
+        "text": "The first time a bomb exploded, he thought he'd gone deaf in his other ear too.",
+        "animation": "mint"
       },
       {
         "id": "g3",
