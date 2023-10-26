@@ -19,6 +19,7 @@ export interface FragmentData {
 export interface ConfigFragment {
   index: number;
   id: string;
+  visited: boolean;
   fragText: Text;
   sounds?: string[]
   sprite?: Sprite;

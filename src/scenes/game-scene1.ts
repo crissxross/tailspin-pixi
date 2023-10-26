@@ -21,6 +21,10 @@ export class GameScene1 extends Container implements IScene {
     fragData!: FragmentData;
     fragText!: Text;
     configFragment!: ConfigFragment;
+
+    allVisited = false;
+    visitedFragments: number[] = [];
+
     mint: AnimatedSprite;
     mintTextures: Texture[] = [];
     purrl: AnimatedSprite;
@@ -56,13 +60,14 @@ export class GameScene1 extends Container implements IScene {
         this.addPurrl(parentWidth, parentHeight);
         // rotate - just TESTING
         this.rotate(this.innerEar);
+        console.log('visitedFragments', this.visitedFragments);
     }
 
     addSceneData() {
         console.log('scene number', this.sceneData.scene);
 
         this.sceneData.fragments.forEach((fragment: FragmentData, i) => {
-            console.log(`${i}: ${fragment.id} - ${fragment.text}`);
+            // console.log(`${i}: ${fragment.id} - ${fragment.text}`);
 
             const offsetX = 50 + i*50;
             const offsetY = 100 + i*120;
@@ -79,6 +84,7 @@ export class GameScene1 extends Container implements IScene {
             this.configFragment = {
                 index: i,
                 id: this.fragData.id,
+                visited: false,
                 fragText: this.fragText,
                 sounds: this.fragData.sounds,
                 sprite: this.innerEar,
@@ -88,7 +94,7 @@ export class GameScene1 extends Container implements IScene {
 
             this.addChild(this.fragText);
 
-            this.storyButton = new StoryButton(this.configFragment, this.activateFragment);
+            this.storyButton = new StoryButton(this.configFragment, this.activateFragment, this.updateVisitedFragments);
             this.addStoryButton(offsetX, offsetY);
         });
     }
@@ -99,10 +105,6 @@ export class GameScene1 extends Container implements IScene {
                 return this.mint;
             case 1:
                 return this.purrl;
-            // case 2:
-            //     return this.animation3;
-            // default:
-            //     this.defaultAnimation;
         }
     }
 
@@ -112,6 +114,11 @@ export class GameScene1 extends Container implements IScene {
     }
 
     activateFragment(config: ConfigFragment) {
+        config.visited = true;
+        // this.visitedFragments.push(config.id);
+        // console.log('visitedFragments', this.visitedFragments);
+        // this.updateVisitedFragments(config.id);
+
         gsap.to(config.fragText, {
             pixi: { alpha: 1 },
             duration: 1,
@@ -123,25 +130,14 @@ export class GameScene1 extends Container implements IScene {
             gsap.to(config.animation, {
                 pixi: { alpha: 1 },
                 duration: 2,
-                stagger: 0.5,
             });
             config.animation.play();
         }
-        // if (config.animatedSprites) {
-            //     gsap.to(config.animatedSprites, {
-                //         pixi: { alpha: 1 },
-                //         duration: 2,
-                //         stagger: 0.5,
-                //     });
-                //     config.animatedSprites.forEach(sprite => sprite.play());
-                // }
-        if (config.sprite) {
-            gsap.to(config.sprite, {
-                pixi: { rotation: '+= 180' },
-                duration: 1
-            });
-        }
-        console.log(`activate fragText ${config.index}: ${config.id} - ${config.fragText.text}`);
+
+        console.log(`activated fragText ${config.index}: ${config.id} - ${config.fragText.text}`);
+        console.log('visited', config.id, config.visited);
+
+        // this.updateVisitedFragments(config.id);
     }
 
     addMint(parentWidth: number, parentHeight: number) {
@@ -152,7 +148,6 @@ export class GameScene1 extends Container implements IScene {
         this.mint.animationSpeed = 0.2;
         this.mint.alpha = 0;
         this.addChild(this.mint);
-        // this.mint.play();
     }
 
     addPurrl(parentWidth: number, parentHeight: number) {
@@ -163,7 +158,6 @@ export class GameScene1 extends Container implements IScene {
         this.purrl.animationSpeed = 0.2;
         this.purrl.alpha = 0;
         this.addChild(this.purrl);
-        // this.purrl.play();
     }
 
     addInnerEar(parentWidth: number, parentHeight: number) {
@@ -175,18 +169,30 @@ export class GameScene1 extends Container implements IScene {
         this.innerEar.position.y = parentHeight*0.5;
         this.innerEar.alpha = 0.5;
 
-        this.innerEar.eventMode = 'static';
-        this.innerEar.cursor = 'pointer';
+        // this.innerEar.eventMode = 'static';
+        // this.innerEar.cursor = 'pointer';
 
-        this.innerEar.on('pointerdown', () => {
-            SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
-            // sound.play("tinkling-chimes");
-        });
+        // this.innerEar.on('pointerdown', () => {
+        //     this.goToNextScene();
+        // });
         this.addChild(this.innerEar);
     }
 
+    updateVisitedFragments(config: ConfigFragment) {
+        console.log('called updateVisitedFragments', config.index, config.id);
+        if (!this.visitedFragments.includes(config.index)) {
+            this.visitedFragments.push(config.index);
+            console.log('visitedFragments', this.visitedFragments);
+        }
+    }
+
+    goToNextScene() {
+        // TODO: remove any event listeners & kill any animations
+        SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
+    }
+
+    // TODO: remove, JUST TESTING
     rotate(sprite: Sprite) {
-        // console.log('rotate');
         gsap.to(sprite, {
             pixi: { rotation: '+= 360' },
             duration: 2

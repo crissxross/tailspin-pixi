@@ -7,7 +7,8 @@ export class StoryButton extends Container  {
 
   constructor(
     configFragment: ConfigFragment,
-    onclick: (configFragment: ConfigFragment) => void
+    onclick: (configFragment: ConfigFragment) => void,
+    onup: (configFragment: ConfigFragment) => void
   ) {
     super();
 
@@ -20,6 +21,11 @@ export class StoryButton extends Container  {
   this.button.onPress.connect(() => {
     console.log('onPress');
     onclick(configFragment);
+  });
+
+  this.button.onUp.connect(() => {
+    console.log('onUp');
+    onup(configFragment);
   });
 
   this.addChild(this.button);
