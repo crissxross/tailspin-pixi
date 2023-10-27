@@ -1,11 +1,10 @@
-import { AnimatedSprite, Assets, Container, DisplayObject, Sprite, Text, Texture } from 'pixi.js';
+import { AnimatedSprite, Assets, Container, DisplayObject, Graphics, Sprite, Text, Texture } from 'pixi.js';
 import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
-import { ConfigFragment, FragmentData, StoryScene } from '../shared/story-model';
+import { FragmentData, StoryScene } from '../shared/story-model';
 import { GameScene2 } from './game-scene2';
-import { StoryButton } from '../components/story-button';
 import { ScenesConfig } from '../config/scenesConfig';
 
 gsap.registerPlugin(PixiPlugin);
@@ -16,14 +15,14 @@ PixiPlugin.registerPIXI({
 
 export class GameScene1 extends Container implements IScene {
     innerEar: Sprite;
-    storyButton!: StoryButton;
+    storyButton!: Graphics;
     sceneData!: StoryScene;
     fragData!: FragmentData;
     fragText!: Text;
-    configFragment!: ConfigFragment;
-
-    allVisited = false;
+    // storyIsActive = false;
     visitedFragments: number[] = [];
+    allVisited = false;
+    private endSceneTimer!: number;
 
     mint: AnimatedSprite;
     mintTextures: Texture[] = [];
@@ -60,43 +59,53 @@ export class GameScene1 extends Container implements IScene {
         this.addPurrl(parentWidth, parentHeight);
         // rotate - just TESTING
         this.rotate(this.innerEar);
-        console.log('visitedFragments', this.visitedFragments);
     }
 
     addSceneData() {
         console.log('scene number', this.sceneData.scene);
-
+        // populate scene with fragments with their corresponding animations & story activation buttons
         this.sceneData.fragments.forEach((fragment: FragmentData, i) => {
             // console.log(`${i}: ${fragment.id} - ${fragment.text}`);
-
             const offsetX = 50 + i*50;
-            const offsetY = 100 + i*120;
+            const offsetY = 200 + i*120;
             const animation = this.assignAnimation(i);
-            console.log('animation for index', i, animation);
+            // console.log('animation for index', i, animation);
+            const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
+            fragmentText.anchor.set(0, 1);
+            fragmentText.position.set(offsetX+40, offsetY);
+            fragmentText.alpha = 0;
 
-            this.fragData = this.sceneData.fragments[i];
-
-            this.fragText = new Text(this.fragData.text, ScenesConfig.fragmentStyle);
-
-            this.fragText.position.set(offsetX, offsetY);
-            this.fragText.alpha = 0;
-
-            this.configFragment = {
-                index: i,
-                id: this.fragData.id,
-                visited: false,
-                fragText: this.fragText,
-                sounds: this.fragData.sounds,
-                sprite: this.innerEar,
-                animation: animation,
-                // animatedSprites: [mint, purrl],
-            }
-
-            this.addChild(this.fragText);
-
-            this.storyButton = new StoryButton(this.configFragment, this.activateFragment, this.updateVisitedFragments);
-            this.addStoryButton(offsetX, offsetY);
+            this.addChild(fragmentText);
+            this.addStoryButton(i, fragment, fragmentText, animation, offsetX, offsetY);
         });
+    }
+
+    addStoryButton(
+        i: number, fragment: FragmentData, fragmentText: Text, animation: any, offsetX: number, offsetY: number
+        ) {
+        this.storyButton = new Graphics()
+            .beginFill('hsl(204 30% 70% / 0.4)')
+            .drawCircle(0, 0, 40);
+        this.storyButton.position.set(offsetX, offsetY);
+        this.storyButton.eventMode = 'static';
+        this.storyButton.cursor = 'pointer';
+        // Activate story fragment
+        this.storyButton.on('pointerenter', () => {
+            console.log('pointerenter fragment index', i, 'id', fragment.id);
+            this.activateFragment(fragment, fragmentText, animation);
+            this.updateVisitedFragments(fragment, i);
+            // Cancel the existing timer (if any)
+            clearTimeout(this.endSceneTimer);
+        });
+        // Deactivate story fragment
+        this.storyButton.on('pointerleave', () => {
+            console.log('pointerleave - so hide fragment id', fragment.id);
+            this.deactivateFragment(fragment, fragmentText, animation);
+            if (this.allVisited) {
+                this.goToNextScene();
+            }
+        });
+        this.addChild(this.storyButton);
     }
 
     assignAnimation(i: number) {
@@ -108,36 +117,30 @@ export class GameScene1 extends Container implements IScene {
         }
     }
 
-    addStoryButton(offsetX: number, offsetY: number) {
-        this.storyButton.position.set(offsetX-40, offsetY);
-        this.addChild(this.storyButton);
-    }
-
-    activateFragment(config: ConfigFragment) {
-        config.visited = true;
-        // this.visitedFragments.push(config.id);
-        // console.log('visitedFragments', this.visitedFragments);
-        // this.updateVisitedFragments(config.id);
-
-        gsap.to(config.fragText, {
+    activateFragment(fragment: FragmentData, fragText: Text, animation: any) {
+        gsap.to(fragText, {
             pixi: { alpha: 1 },
             duration: 1,
         });
-        if (config.sounds) {
-            config.sounds.forEach(s => sound.play(s));
+        if (fragment.sounds) {
+            fragment.sounds.forEach(s => sound.play(s));
         }
-        if (config.animation) {
-            gsap.to(config.animation, {
+        if (animation) {
+            gsap.to(animation, {
                 pixi: { alpha: 1 },
                 duration: 2,
             });
-            config.animation.play();
+            animation.play();
         }
+        // console.log('visited', fragment.id);
+    }
 
-        console.log(`activated fragText ${config.index}: ${config.id} - ${config.fragText.text}`);
-        console.log('visited', config.id, config.visited);
-
-        // this.updateVisitedFragments(config.id);
+    deactivateFragment(fragment: FragmentData, fragText: Text, animation: any) {
+        // console.log('deactivateFragment', fragment.id);
+        gsap.to(fragText, {
+            pixi: { alpha: 0 },
+            duration: 1,
+        });
     }
 
     addMint(parentWidth: number, parentHeight: number) {
@@ -161,34 +164,35 @@ export class GameScene1 extends Container implements IScene {
     }
 
     addInnerEar(parentWidth: number, parentHeight: number) {
-        this.innerEar.anchor.set(0.5);
         // size of innerEar.png is 695x511 therefore its aspect ratio is 0.735:1
         this.innerEar.width = Math.min(parentWidth*0.8, 1389);
         this.innerEar.height = Math.min(parentWidth*0.8, 1389) * 0.735;
+        this.innerEar.anchor.set(0.5);
         this.innerEar.position.x = parentWidth*0.5;
         this.innerEar.position.y = parentHeight*0.5;
         this.innerEar.alpha = 0.5;
-
-        // this.innerEar.eventMode = 'static';
-        // this.innerEar.cursor = 'pointer';
-
-        // this.innerEar.on('pointerdown', () => {
-        //     this.goToNextScene();
-        // });
         this.addChild(this.innerEar);
     }
 
-    updateVisitedFragments(config: ConfigFragment) {
-        console.log('called updateVisitedFragments', config.index, config.id);
-        if (!this.visitedFragments.includes(config.index)) {
-            this.visitedFragments.push(config.index);
+    updateVisitedFragments(fragment: FragmentData, index: number) {
+        console.log('called updateVisitedFragments', index, fragment.id);
+        if (!this.visitedFragments.includes(index)) {
+            this.visitedFragments.push(index);
             console.log('visitedFragments', this.visitedFragments);
+            if (this.visitedFragments.length === this.sceneData.fragments.length) {
+                this.allVisited = true;
+                console.log('allVisited', this.allVisited);
+            }
         }
     }
 
     goToNextScene() {
         // TODO: remove any event listeners & kill any animations
-        SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
+        // Cancel the existing timer (if any) and create a new one
+        clearTimeout(this.endSceneTimer);
+        this.endSceneTimer = setTimeout(() => {
+            SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
+        }, 2000);
     }
 
     // TODO: remove, JUST TESTING
