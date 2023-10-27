@@ -1,4 +1,4 @@
-import { AnimatedSprite, Assets, Container, DisplayObject, Graphics, Sprite, Text, Texture } from 'pixi.js';
+import { AnimatedSprite, Assets, Container, DisplayObject, FederatedPointerEvent, Graphics, Sprite, Text, Texture } from 'pixi.js';
 import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
@@ -22,6 +22,7 @@ export class GameScene1 extends Container implements IScene {
     configFragment!: ConfigFragment;
     allVisited = false;
     visitedFragments: number[] = [];
+    hideTextButton!: Graphics;
 
     mint: AnimatedSprite;
     mintTextures: Texture[] = [];
@@ -49,10 +50,12 @@ export class GameScene1 extends Container implements IScene {
             this.sceneData = data[0]; // scene 1
             this.init(parentWidth, parentHeight);
         });
+
     }
 
     init(parentWidth: number, parentHeight: number) {
         this.addSceneData();
+        this.createHideTextButton(parentWidth, parentHeight);
         this.addInnerEar(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
         this.addPurrl(parentWidth, parentHeight);
@@ -84,7 +87,7 @@ export class GameScene1 extends Container implements IScene {
             this.storyButton.eventMode = 'static';
             this.storyButton.cursor = 'pointer';
             this.storyButton.on('pointerdown', () => {
-                console.log('fragment index', i, 'id', fragment.id);
+                console.log('storyButton activates fragment index', i, 'id', fragment.id);
                 this.activateFragment(fragment, fragmentText, animation);
                 this.updateVisitedFragments(fragment, i);
             });
@@ -108,7 +111,6 @@ export class GameScene1 extends Container implements IScene {
     }
 
     activateFragment(fragment: FragmentData, fragText: Text, animation: any) {
-
         gsap.to(fragText, {
             pixi: { alpha: 1 },
             duration: 1,
@@ -123,8 +125,41 @@ export class GameScene1 extends Container implements IScene {
             });
             animation.play();
         }
-
         console.log('visited', fragment.id);
+        this.hideText(fragment, fragText);
+    }
+
+    hideText(fragment: FragmentData, fragText: Text) {
+        console.log('will hide fragText id', fragment.id, fragText);
+
+        this.hideTextButton.on('pointerdown', (e) => {
+            if (e.target === this.hideTextButton) {
+                console.log('bgListnerObj pointer down event target is bgListenerObj', e.target);
+                console.log('now hideText', fragment.id, fragText);
+                gsap.to(fragText, {
+                    pixi: { alpha: 0 },
+                    duration: 1,
+                });
+            }
+        });
+        this.addChild(this.hideTextButton);
+    }
+
+
+    createHideTextButton(parentWidth: number, parentHeight: number) {
+        this.hideTextButton = new Graphics()
+            .beginFill(0x000000)
+            .drawRect(0, 0, parentWidth, parentHeight);
+        this.hideTextButton.position.set(0, 0);
+        this.hideTextButton.eventMode = 'static';
+        this.hideTextButton.alpha = 0.1;
+
+        // this.hideTextButton.on('pointerdown', (e) => {
+        //     if (e.target === this.hideTextButton) {
+        //         console.log('bgListnerObj pointer down event target is bgListenerObj', e.target);
+        //     }
+        // });
+        // this.addChild(this.hideTextButton);
     }
 
     addMint(parentWidth: number, parentHeight: number) {
