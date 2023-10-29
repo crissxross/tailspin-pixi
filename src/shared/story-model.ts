@@ -12,6 +12,7 @@ export interface StoryScene {
 export interface FragmentData {
   id: string;
   text: string;
+  button: number[];
   sounds?: string[];
   animation?: string;
 }
