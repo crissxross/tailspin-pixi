@@ -6,18 +6,25 @@ export class SceneManager {
     private static _app: Application;
     private static _currentScene: IScene;
 
+    // NOTE: I'm setting width & height to fixed values for now to match the original Flash version
+    // TODO: make stage size dynamic to fit window again
+
     public static get width() {
-        return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        // return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        return 1080;
     }
 
     public static get height() {
-        return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        // return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        return 720;
     }
 
     public static init(bgColor: string, bgAlpha: number): void {
         SceneManager._app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
-            resizeTo: window,
+            // resizeTo: window,
+            width: SceneManager.width,
+            height: SceneManager.height,
             resolution: window.devicePixelRatio || 1,
             autoDensity: true,
             backgroundColor: bgColor,

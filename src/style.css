@@ -65,8 +65,8 @@ body {
 #pixi-canvas {
   grid-row: 1;
   grid-column: 1;
-  /* outline: 2px solid red;
-  outline-offset: -2px; */
+  outline: 1px solid cadetblue;
+  outline-offset: -1px;
 }
 
 .game-title {
