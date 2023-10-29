@@ -14,7 +14,6 @@ PixiPlugin.registerPIXI({
 });
 
 export class GameScene1 extends Container implements IScene {
-    innerEar: Sprite;
     storyButton!: Graphics;
     sceneData!: StoryScene;
     fragData!: FragmentData;
@@ -23,6 +22,9 @@ export class GameScene1 extends Container implements IScene {
     private allVisited = false;
     private endSceneTimer!: number;
 
+    innerEar: Sprite;
+    goldie: AnimatedSprite;
+    goldieTextures: Texture[] = [];
     mint: AnimatedSprite;
     mintTextures: Texture[] = [];
     purrl: AnimatedSprite;
@@ -32,6 +34,12 @@ export class GameScene1 extends Container implements IScene {
         super();
 
         this.innerEar = Sprite.from("innerEar");
+
+        for (let i = 0; i < 6; i++) {
+            const texture = Texture.from(`Goldie000${i}`);
+            this.goldieTextures.push(texture)
+        }
+        this.goldie = new AnimatedSprite(this.goldieTextures);
 
         for (let i = 0; i < 6; i++) {
             const texture = Texture.from(`Mint000${i}`);
@@ -54,10 +62,10 @@ export class GameScene1 extends Container implements IScene {
     init(parentWidth: number, parentHeight: number) {
         this.addInnerEar(parentWidth, parentHeight);
         this.addSceneData();
+        // TODO: add the animations to an animContainer so that I can fade out the whole container at scene end before changing scenes
+        this.addGoldie(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
         this.addPurrl(parentWidth, parentHeight);
-        // TEMPORARY effect
-        // this.fadeIn(this.innerEar);
     }
 
     addSceneData() {
@@ -65,32 +73,27 @@ export class GameScene1 extends Container implements IScene {
         // populate scene with fragments with their corresponding animations & story activation buttons
         this.sceneData.fragments.forEach((fragment: FragmentData, i) => {
             // console.log(`${i}: ${fragment.id} - ${fragment.text}`);
-            // const offsetX = 50 + i*50;
-            // const offsetY = 200 + i*120;
-            const offsetX = fragment.button[0];
-            const offsetY = fragment.button[1];
-            const animation = this.assignAnimation(i);
+            const animation = this.assignAnimation(fragment.id);
             // console.log('animation for index', i, animation);
             const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
-            fragmentText.anchor.set(0, 1);
-            fragmentText.position.set(offsetX+30, offsetY);
+            fragmentText.position.set(fragment.position[0], fragment.position[1]);
             fragmentText.alpha = 0;
 
             this.addChild(fragmentText);
-            this.addStoryButton(i, fragment, fragmentText, animation, offsetX, offsetY);
+            this.addStoryButton(i, fragment, fragmentText, animation);
         });
     }
 
     addStoryButton(
-        index: number, fragment: FragmentData, fragmentText: Text, animation: any, offsetX: number, offsetY: number
+        index: number, fragment: FragmentData, fragmentText: Text, animation: any
         ) {
         this.storyButton = new Graphics()
             .beginFill('hsl(204 30% 70% / 0.4)')
             .drawCircle(0, 0, 30);
-        this.storyButton.position.set(offsetX, offsetY);
+        this.storyButton.position.set(fragment.button[0], fragment.button[1]);
         this.storyButton.eventMode = 'static';
         this.storyButton.cursor = 'pointer';
-        // Activate story fragment
+        // ACTIVATE story fragment
         this.storyButton.on('pointerenter', () => {
             // console.log('pointerenter fragment index', i, 'id', fragment.id);
             this.activateFragment(fragment, fragmentText, animation);
@@ -98,7 +101,7 @@ export class GameScene1 extends Container implements IScene {
             // Cancel the existing timer (if any)
             clearTimeout(this.endSceneTimer);
         });
-        // Deactivate story fragment
+        // DEACTIVATE story fragment
         this.storyButton.on('pointerleave', () => {
             // console.log('pointerleave - so hide fragment id', fragment.id);
             this.deactivateFragment(fragment, fragmentText, animation);
@@ -109,12 +112,15 @@ export class GameScene1 extends Container implements IScene {
         this.addChild(this.storyButton);
     }
 
-    assignAnimation(i: number) {
-        switch (i) {
-            case 0:
-                return this.mint;
-            case 1:
+    assignAnimation(fragId: string) {
+        switch (fragId) {
+            case 'g2':
+                return this.goldie;
+            case 'j1':
+                this.tweenPurrl();
                 return this.purrl;
+            case 'j2':
+                return this.mint;
         }
     }
 
@@ -131,6 +137,7 @@ export class GameScene1 extends Container implements IScene {
                 pixi: { alpha: 1 },
                 duration: 2,
             });
+            // play the AnimatedSprite
             animation.play();
         }
         // console.log('visited', fragment.id);
@@ -142,30 +149,55 @@ export class GameScene1 extends Container implements IScene {
             pixi: { alpha: 0 },
             duration: 1,
         });
+        // TODO: most/all animations have a finite length and should play through to their end so may not need this
+        // if (animation) {
+        //     animation.stop();
+        // }
+    }
+
+    addGoldie(parentWidth: number, parentHeight: number) {
+        this.goldie.anchor.set(0.5, 1);
+        this.goldie.scale.set(0.9);
+        this.goldie.position.x = parentWidth * 0.15;
+        this.goldie.position.y = parentHeight * 0.94;
+        this.goldie.loop = true;
+        this.goldie.animationSpeed = 0.2;
+        this.goldie.alpha = 0;
+        this.addChild(this.goldie);
     }
 
     addMint(parentWidth: number, parentHeight: number) {
-        this.mint.anchor.set(0.5);
-        this.mint.position.x = parentWidth * 0.75;
-        this.mint.position.y = parentHeight * 0.75;
+        this.mint.anchor.set(0.5, 1);
+        this.mint.scale.set(0.9);
+        this.mint.position.x = parentWidth * 0.88;
+        this.mint.position.y = parentHeight * 0.98;
         this.mint.loop = true;
         this.mint.animationSpeed = 0.2;
         this.mint.alpha = 0;
         this.addChild(this.mint);
-        // TODO: TESTING, remove
-        setTimeout(() => {
-            this.mint.stop();
-        }, 3000);
     }
 
     addPurrl(parentWidth: number, parentHeight: number) {
-        this.purrl.anchor.set(0.5);
+        this.purrl.anchor.set(0.5, 1);
+        this.purrl.scale.set(0.8);
         this.purrl.position.x = parentWidth * 0.25;
-        this.purrl.position.y = parentHeight * 0.75;
+        this.purrl.position.y = parentHeight * 0.94;
         this.purrl.loop = true;
         this.purrl.animationSpeed = 0.2;
         this.purrl.alpha = 0;
         this.addChild(this.purrl);
+    }
+
+    tweenPurrl() {
+        return gsap.to(this.purrl, {
+            pixi: { scale: 0.9 },
+            x: '+= 100',
+            duration: 2,
+            ease: 'power1.inOut',
+            repeat: -1,
+            yoyo: true,
+        });
+        // this.purrl.play();
     }
 
     addInnerEar(parentWidth: number, parentHeight: number) {
@@ -177,10 +209,15 @@ export class GameScene1 extends Container implements IScene {
         this.innerEar.position.y = parentHeight*0.5;
         this.innerEar.alpha = 0;
         this.addChild(this.innerEar);
-        gsap.to(this.innerEar, {
-            pixi: { alpha: 0.4 },
-            duration: 3
-        });
+        gsap.timeline()
+            .to(this.innerEar, {
+                pixi: { alpha: 0.4 },
+                duration: 3
+            })
+            .to(this.innerEar, {
+                pixi: { alpha: 0 },
+                duration: 5
+            }, '>1');
     }
 
     updateVisitedFragments(index: number) {
@@ -203,22 +240,9 @@ export class GameScene1 extends Container implements IScene {
         this.endSceneTimer = setTimeout(() => {
             SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
         }, 2000);
+
     }
 
-    fadeIn(sprite: Sprite) {
-        gsap.to(sprite, {
-            pixi: { alpha: 1 },
-            duration: 2
-        });
-    }
-
-    // TODO: remove, JUST TESTING
-    rotate(sprite: Sprite) {
-        gsap.to(sprite, {
-            pixi: { rotation: '+= 360' },
-            duration: 2
-        });
-    }
 
     update(framesPassed: number) {
         // console.log('update framesPassed: ', framesPassed);
