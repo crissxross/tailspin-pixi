@@ -18,6 +18,7 @@ export class GameScene1 extends Container implements IScene {
     sceneData!: StoryScene;
     fragData!: FragmentData;
     fragText!: Text;
+    animContainer: Container;
     private visitedFragments: number[] = [];
     private allVisited = false;
     private endSceneTimer!: number;
@@ -34,6 +35,7 @@ export class GameScene1 extends Container implements IScene {
         super();
 
         this.innerEar = Sprite.from("innerEar");
+        this.animContainer = new Container();
 
         for (let i = 0; i < 6; i++) {
             const texture = Texture.from(`Goldie000${i}`);
@@ -60,6 +62,7 @@ export class GameScene1 extends Container implements IScene {
     }
 
     init(parentWidth: number, parentHeight: number) {
+        this.addChild(this.animContainer);
         this.addInnerEar(parentWidth, parentHeight);
         this.addSceneData();
         // TODO: add the animations to an animContainer so that I can fade out the whole container at scene end before changing scenes
@@ -105,8 +108,11 @@ export class GameScene1 extends Container implements IScene {
         this.storyButton.on('pointerleave', () => {
             // console.log('pointerleave - so hide fragment id', fragment.id);
             this.deactivateFragment(fragment, fragmentText, animation);
+            // TODO: REMOVE this, it doesn't work, it only makes the last button in the array fade to 0.5 alpha
+            // this.storyButton.alpha = 0.5;
+
             if (this.allVisited) {
-                this.goToNextScene();
+                this.endScene();
             }
         });
         this.addChild(this.storyButton);
@@ -163,7 +169,7 @@ export class GameScene1 extends Container implements IScene {
         this.goldie.loop = true;
         this.goldie.animationSpeed = 0.2;
         this.goldie.alpha = 0;
-        this.addChild(this.goldie);
+        this.animContainer.addChild(this.goldie);
     }
 
     addMint(parentWidth: number, parentHeight: number) {
@@ -174,7 +180,7 @@ export class GameScene1 extends Container implements IScene {
         this.mint.loop = true;
         this.mint.animationSpeed = 0.2;
         this.mint.alpha = 0;
-        this.addChild(this.mint);
+        this.animContainer.addChild(this.mint);
     }
 
     addPurrl(parentWidth: number, parentHeight: number) {
@@ -185,7 +191,7 @@ export class GameScene1 extends Container implements IScene {
         this.purrl.loop = true;
         this.purrl.animationSpeed = 0.2;
         this.purrl.alpha = 0;
-        this.addChild(this.purrl);
+        this.animContainer.addChild(this.purrl);
     }
 
     tweenPurrl() {
@@ -231,16 +237,21 @@ export class GameScene1 extends Container implements IScene {
         }
     }
 
-    // TODO: implement a scene ending sequence
-
-    goToNextScene() {
-        // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
+    endScene() {
         // Cancel the existing timer (if any) and create a new one
         clearTimeout(this.endSceneTimer);
         this.endSceneTimer = setTimeout(() => {
-            SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
+            gsap.timeline({onComplete: this.goToNextScene})
+                .to(this.animContainer, {
+                    pixi: { alpha: 0 },
+                    duration: 1.5,
+                });
         }, 2000);
+    }
 
+    goToNextScene() {
+        // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
+        SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
     }
 
 
