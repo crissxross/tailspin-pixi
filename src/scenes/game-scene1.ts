@@ -22,6 +22,7 @@ export class GameScene1 extends Container implements IScene {
     private visitedFragments: number[] = [];
     private allVisited = false;
     private endSceneTimer!: number;
+    storyButtonList: Graphics[] = [];
 
     innerEar: Sprite;
     goldie: AnimatedSprite;
@@ -65,7 +66,6 @@ export class GameScene1 extends Container implements IScene {
         this.addChild(this.animContainer);
         this.addInnerEar(parentWidth, parentHeight);
         this.addSceneData();
-        // TODO: add the animations to an animContainer so that I can fade out the whole container at scene end before changing scenes
         this.addGoldie(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
         this.addPurrl(parentWidth, parentHeight);
@@ -93,6 +93,7 @@ export class GameScene1 extends Container implements IScene {
         this.storyButton = new Graphics()
             .beginFill('hsl(204 30% 70% / 0.4)')
             .drawCircle(0, 0, 30);
+        this.storyButtonList.push(this.storyButton);
         this.storyButton.position.set(fragment.button[0], fragment.button[1]);
         this.storyButton.eventMode = 'static';
         this.storyButton.cursor = 'pointer';
@@ -108,9 +109,11 @@ export class GameScene1 extends Container implements IScene {
         this.storyButton.on('pointerleave', () => {
             // console.log('pointerleave - so hide fragment id', fragment.id);
             this.deactivateFragment(fragment, fragmentText, animation);
-            // TODO: REMOVE this, it doesn't work, it only makes the last button in the array fade to 0.5 alpha
-            // this.storyButton.alpha = 0.5;
-
+            // show story button as visited
+            gsap.to(this.storyButtonList[index], {
+                pixi: { alpha: 0.6 },
+                duration: 0.5,
+            });
             if (this.allVisited) {
                 this.endScene();
             }
