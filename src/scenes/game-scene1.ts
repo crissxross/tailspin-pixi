@@ -6,6 +6,8 @@ import { IScene, SceneManager } from '../shared/scene-manager';
 import { FragmentData, StoryScene } from '../shared/story-model';
 import { GameScene2 } from './game-scene2';
 import { ScenesConfig } from '../config/scenesConfig';
+// import { addSceneData } from '../shared/helpers';
+import { SceneUtils } from '../shared/scene-utils';
 
 gsap.registerPlugin(PixiPlugin);
 
@@ -19,9 +21,9 @@ export class GameScene1 extends Container implements IScene {
     fragData!: FragmentData;
     fragText!: Text;
     animContainer: Container;
-    private visitedFragments: number[] = [];
-    private allVisited = false;
-    private endSceneTimer!: number;
+    visitedFragments: number[] = [];
+    allVisited = false;
+    endSceneTimer!: number;
     storyButtonList: Graphics[] = [];
 
     innerEar: Sprite;
@@ -71,54 +73,32 @@ export class GameScene1 extends Container implements IScene {
         this.addPurrl(parentWidth, parentHeight);
     }
 
-    addSceneData() {
-        console.log('scene number', this.sceneData.scene);
-        // populate scene with fragments with their corresponding animations & story activation buttons
-        this.sceneData.fragments.forEach((fragment: FragmentData, i) => {
-            // console.log(`${i}: ${fragment.id} - ${fragment.text}`);
-            const animation = this.assignAnimation(fragment.id);
-            // console.log('animation for index', i, animation);
-            const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
-            fragmentText.position.set(fragment.position[0], fragment.position[1]);
-            fragmentText.alpha = 0;
+    // TODO: SceneUtils is working apart from ending the scene. So I think I need to add more functions to it - updateVisitedFragments, endScene, gotoNextScene...
 
-            this.addChild(fragmentText);
-            this.addStoryButton(i, fragment, fragmentText, animation);
-        });
+    addSceneData() {
+        SceneUtils.addSceneData(
+            this.sceneData,
+            this.addChild.bind(this),
+            this.addStoryButton.bind(this),
+            this.assignAnimation.bind(this),
+        );
     }
 
-    addStoryButton(
-        index: number, fragment: FragmentData, fragmentText: Text, animation: any
-        ) {
-        this.storyButton = new Graphics()
-            .beginFill('hsl(204 30% 70% / 0.4)')
-            .drawCircle(0, 0, 30);
-        this.storyButtonList.push(this.storyButton);
-        this.storyButton.position.set(fragment.button[0], fragment.button[1]);
-        this.storyButton.eventMode = 'static';
-        this.storyButton.cursor = 'pointer';
-        // ACTIVATE story fragment
-        this.storyButton.on('pointerenter', () => {
-            // console.log('pointerenter fragment index', i, 'id', fragment.id);
-            this.activateFragment(fragment, fragmentText, animation);
-            this.updateVisitedFragments(index);
-            // Cancel the existing timer (if any)
-            clearTimeout(this.endSceneTimer);
-        });
-        // DEACTIVATE story fragment
-        this.storyButton.on('pointerleave', () => {
-            // console.log('pointerleave - so hide fragment id', fragment.id);
-            this.deactivateFragment(fragment, fragmentText, animation);
-            // show story button as visited
-            gsap.to(this.storyButtonList[index], {
-                pixi: { alpha: 0.6 },
-                duration: 0.5,
-            });
-            if (this.allVisited) {
-                this.endScene();
-            }
-        });
-        this.addChild(this.storyButton);
+    addStoryButton(index: number, fragment: FragmentData, fragmentText: Text, animation: any) {
+        SceneUtils.addStoryButton(
+            this.addChild.bind(this),
+            this.storyButtonList,
+            this.activateFragment.bind(this),
+            this.deactivateFragment.bind(this),
+            this.updateVisitedFragments.bind(this),
+            this.endScene.bind(this),
+            this.allVisited,
+            index,
+            fragment,
+            fragmentText,
+            animation,
+            this.endSceneTimer,
+        );
     }
 
     assignAnimation(fragId: string) {
@@ -229,6 +209,7 @@ export class GameScene1 extends Container implements IScene {
             }, '>1');
     }
 
+    // TODO: should this be in SceneUtils?
     updateVisitedFragments(index: number) {
         if (!this.visitedFragments.includes(index)) {
             this.visitedFragments.push(index);
@@ -240,7 +221,9 @@ export class GameScene1 extends Container implements IScene {
         }
     }
 
+    // TODO: should this be in SceneUtils?
     endScene() {
+        console.log('endScene');
         // Cancel the existing timer (if any) and create a new one
         clearTimeout(this.endSceneTimer);
         this.endSceneTimer = setTimeout(() => {
@@ -252,6 +235,7 @@ export class GameScene1 extends Container implements IScene {
         }, 2000);
     }
 
+    // TODO: should this be in SceneUtils?
     goToNextScene() {
         // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
         SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
