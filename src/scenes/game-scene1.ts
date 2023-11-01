@@ -5,7 +5,8 @@ import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
 import { FragmentData, StoryScene } from '../shared/story-model';
 import { GameScene2 } from './game-scene2';
-import { ScenesConfig } from '../config/scenesConfig';
+import { addSceneData, createStoryButton, checkAllVisited } from '../shared/scene-utils.ts';
+// import { ScenesConfig } from '../config/scenesConfig';
 
 gsap.registerPlugin(PixiPlugin);
 
@@ -19,9 +20,9 @@ export class GameScene1 extends Container implements IScene {
     fragData!: FragmentData;
     fragText!: Text;
     animContainer: Container;
-    private visitedFragments: number[] = [];
-    private allVisited = false;
-    private endSceneTimer!: number;
+    visitedFragments: number[] = [];
+    allVisited = false;
+    endSceneTimer!: number;
     storyButtonList: Graphics[] = [];
 
     innerEar: Sprite;
@@ -65,60 +66,41 @@ export class GameScene1 extends Container implements IScene {
     init(parentWidth: number, parentHeight: number) {
         this.addChild(this.animContainer);
         this.addInnerEar(parentWidth, parentHeight);
-        this.addSceneData();
+        // this.addSceneData();
+        addSceneData(
+            this.sceneData,
+            this.addChild.bind(this),
+            this.addStoryButton.bind(this),
+            this.assignAnimation.bind(this),
+        );
         this.addGoldie(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
         this.addPurrl(parentWidth, parentHeight);
     }
 
-    addSceneData() {
-        console.log('scene number', this.sceneData.scene);
-        // populate scene with fragments with their corresponding animations & story activation buttons
-        this.sceneData.fragments.forEach((fragment: FragmentData, i) => {
-            // console.log(`${i}: ${fragment.id} - ${fragment.text}`);
-            const animation = this.assignAnimation(fragment.id);
-            // console.log('animation for index', i, animation);
-            const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
-            fragmentText.position.set(fragment.position[0], fragment.position[1]);
-            fragmentText.alpha = 0;
-
-            this.addChild(fragmentText);
-            this.addStoryButton(i, fragment, fragmentText, animation);
-        });
-    }
-
     addStoryButton(
         index: number, fragment: FragmentData, fragmentText: Text, animation: any
-        ) {
-        this.storyButton = new Graphics()
-            .beginFill('hsl(204 30% 70% / 0.4)')
-            .drawCircle(0, 0, 30);
-        this.storyButtonList.push(this.storyButton);
-        this.storyButton.position.set(fragment.button[0], fragment.button[1]);
-        this.storyButton.eventMode = 'static';
-        this.storyButton.cursor = 'pointer';
-        // ACTIVATE story fragment
-        this.storyButton.on('pointerenter', () => {
-            // console.log('pointerenter fragment index', i, 'id', fragment.id);
-            this.activateFragment(fragment, fragmentText, animation);
-            this.updateVisitedFragments(index);
+    ) {
+        const btn = createStoryButton(
+            this.addChild.bind(this),
+            this.storyButtonList,
+            this.activateFragment.bind(this),
+            this.deactivateFragment.bind(this),
+            this.updateVisitedFragments.bind(this),
+            index,
+            fragment,
+            fragmentText,
+            animation,
+        );
+        btn.on('pointerenter', () => {
             // Cancel the existing timer (if any)
             clearTimeout(this.endSceneTimer);
         });
-        // DEACTIVATE story fragment
-        this.storyButton.on('pointerleave', () => {
-            // console.log('pointerleave - so hide fragment id', fragment.id);
-            this.deactivateFragment(fragment, fragmentText, animation);
-            // show story button as visited
-            gsap.to(this.storyButtonList[index], {
-                pixi: { alpha: 0.6 },
-                duration: 0.5,
-            });
+        btn.on('pointerleave', () => {
             if (this.allVisited) {
                 this.endScene();
             }
         });
-        this.addChild(this.storyButton);
     }
 
     assignAnimation(fragId: string) {
@@ -230,13 +212,9 @@ export class GameScene1 extends Container implements IScene {
     }
 
     updateVisitedFragments(index: number) {
-        if (!this.visitedFragments.includes(index)) {
-            this.visitedFragments.push(index);
-            console.log('visitedFragments', this.visitedFragments);
-            if (this.visitedFragments.length === this.sceneData.fragments.length) {
-                this.allVisited = true;
-                console.log('allVisited', this.allVisited);
-            }
+        if (checkAllVisited(this.visitedFragments, index, this.sceneData)) {
+            this.allVisited = true;
+            console.log('allVisited', this.allVisited);
         }
     }
 
