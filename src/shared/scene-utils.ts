@@ -8,6 +8,10 @@ gsap.registerPlugin(PixiPlugin);
 
 // Define a new class or module that contains the reusable methods
 export class SceneUtils {
+  // TODO: I may need to use these properties going forward
+  // visitedFragments: number[] = [];
+  // allVisited = false;
+
   static addSceneData(
     sceneData: StoryScene,
     addChild: (child: DisplayObject) => void,
@@ -17,9 +21,7 @@ export class SceneUtils {
     console.log('scene number', sceneData.scene);
     // populate scene with fragments with their corresponding animations & story activation buttons
     sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
-      // console.log(`${i}: ${fragment.id} - ${fragment.text}`);
       const animation = assignAnimation(fragment.id);
-      // console.log('animation for index', i, animation);
       const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
       fragmentText.position.set(fragment.position[0], fragment.position[1]);
       fragmentText.alpha = 0;
@@ -52,7 +54,6 @@ export class SceneUtils {
     storyButton.cursor = 'pointer';
     // ACTIVATE story fragment
     storyButton.on('pointerenter', () => {
-      // console.log('pointerenter fragment index', i, 'id', fragment.id);
       activateFragment(fragment, fragmentText, animation);
       updateVisitedFragments(index);
       // Cancel the existing timer (if any)
@@ -60,7 +61,6 @@ export class SceneUtils {
     });
     // DEACTIVATE story fragment
     storyButton.on('pointerleave', () => {
-      // console.log('pointerleave - so hide fragment id', fragment.id);
       deactivateFragment(fragment, fragmentText, animation);
       // show story button as visited
       gsap.to(storyButtonList[index], {
@@ -74,4 +74,6 @@ export class SceneUtils {
     });
     addChild(storyButton);
   }
+
+
 }
