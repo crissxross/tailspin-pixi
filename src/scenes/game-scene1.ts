@@ -6,7 +6,6 @@ import { IScene, SceneManager } from '../shared/scene-manager';
 import { FragmentData, StoryScene } from '../shared/story-model';
 import { GameScene2 } from './game-scene2';
 import { addSceneData, createStoryButton, checkAllVisited } from '../shared/scene-utils.ts';
-// import { ScenesConfig } from '../config/scenesConfig';
 
 gsap.registerPlugin(PixiPlugin);
 
@@ -19,6 +18,7 @@ export class GameScene1 extends Container implements IScene {
     sceneData!: StoryScene;
     fragData!: FragmentData;
     fragText!: Text;
+    buttonsContainer: Container;
     animContainer: Container;
     visitedFragments: number[] = [];
     allVisited = false;
@@ -37,6 +37,7 @@ export class GameScene1 extends Container implements IScene {
         super();
 
         this.innerEar = Sprite.from("innerEar");
+        this.buttonsContainer = new Container();
         this.animContainer = new Container();
 
         for (let i = 0; i < 6; i++) {
@@ -64,6 +65,7 @@ export class GameScene1 extends Container implements IScene {
     }
 
     init(parentWidth: number, parentHeight: number) {
+        this.addChild(this.buttonsContainer);
         this.addChild(this.animContainer);
         this.addInnerEar(parentWidth, parentHeight);
         // this.addSceneData();
@@ -82,7 +84,6 @@ export class GameScene1 extends Container implements IScene {
         index: number, fragment: FragmentData, fragmentText: Text, animation: any
     ) {
         const btn = createStoryButton(
-            this.addChild.bind(this),
             this.storyButtonList,
             this.activateFragment.bind(this),
             this.deactivateFragment.bind(this),
@@ -92,6 +93,7 @@ export class GameScene1 extends Container implements IScene {
             fragmentText,
             animation,
         );
+        this.buttonsContainer.addChild(btn);
         btn.on('pointerenter', () => {
             // Cancel the existing timer (if any)
             clearTimeout(this.endSceneTimer);
@@ -223,7 +225,7 @@ export class GameScene1 extends Container implements IScene {
         clearTimeout(this.endSceneTimer);
         this.endSceneTimer = setTimeout(() => {
             gsap.timeline({onComplete: this.goToNextScene})
-                .to(this.animContainer, {
+                .to([this.animContainer, this.buttonsContainer], {
                     pixi: { alpha: 0 },
                     duration: 1.5,
                 });

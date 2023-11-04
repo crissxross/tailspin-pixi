@@ -31,7 +31,6 @@ export function addSceneData(
 }
 
 export function createStoryButton(
-  addChild: (child: DisplayObject) => void,
   storyButtonList: Graphics[],
   activateFragment: (fragment: FragmentData, fragmentText: Text, animation: any) => void,
   deactivateFragment: (fragment: FragmentData, fragmentText: Text, animation: any) => void,
@@ -62,7 +61,6 @@ export function createStoryButton(
         duration: 0.5,
       });
     });
-    addChild(storyButton);
     return storyButton;
 }
 
