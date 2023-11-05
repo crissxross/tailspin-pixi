@@ -4,8 +4,9 @@ import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
 import { FragmentData, StoryScene } from '../shared/story-model';
-import { GameScene2 } from './game-scene2';
 import { addSceneData, createStoryButton, checkAllVisited } from '../shared/scene-utils.ts';
+import { GameScene2 } from './game-scene2';
+// import { GameSceneDemo } from './game-scene-demo.ts';
 
 gsap.registerPlugin(PixiPlugin);
 

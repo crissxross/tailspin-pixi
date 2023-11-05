@@ -2,9 +2,9 @@ import { AnimatedSprite, Container, Sprite, Text, TextStyle, Texture } from 'pix
 import { gsap } from "gsap";
 // import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
-import { GameSceneDemo } from './game-scene-demo';
+import { GameScene1 } from './game-scene1';
 
-export class GameScene2 extends Container implements IScene {
+export class GameSceneDemo extends Container implements IScene {
     sky: Sprite;
     mint: AnimatedSprite;
     mintTextures: Texture[] = [];
@@ -93,8 +93,8 @@ export class GameScene2 extends Container implements IScene {
         });
 
         this.text = new Text(`
-        Scene 2.
-        Click to move on.`,
+        Scene demo... END.
+        Click to go back to the first scene.`,
         style,
         );
 
@@ -103,7 +103,7 @@ export class GameScene2 extends Container implements IScene {
         this.text.position.y = parentHeight * 0.5;
         this.text.eventMode = 'static';
         this.text.cursor = 'pointer';
-        this.text.on('pointerdown', () => { SceneManager.changeScene(new GameSceneDemo(SceneManager.width, SceneManager.height)); });
+        this.text.on('pointerdown', () => { SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height)); });
 
         this.addChild(this.text);
     }
