@@ -67,7 +67,6 @@ export class GameScene2 extends Container implements IScene {
         );
         uiNext(this.nextScene, parentWidth, parentHeight, this.addChild.bind(this));
         uiPrevious(this.previousScene, parentHeight, this.addChild.bind(this));
-        document.addEventListener("keydown", this.onKeyDown.bind(this));
 
         // this.addSky(parentWidth, parentHeight);
         this.addExplosion(parentWidth, parentHeight);
@@ -164,18 +163,6 @@ export class GameScene2 extends Container implements IScene {
     goToNextScene() {
         // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
         SceneManager.changeScene(new this.nextScene(SceneManager.width, SceneManager.height));
-    }
-
-    // Navigation shortcuts
-    onKeyDown(e: KeyboardEvent) {
-        if (e.key === 'ArrowRight') {
-            this.goToNextScene();
-            document.removeEventListener("keydown", this.onKeyDown.bind(this));
-        }
-        if (e.key === 'ArrowLeft') {
-            SceneManager.changeScene(new this.previousScene(SceneManager.width, SceneManager.height));
-            document.removeEventListener("keydown", this.onKeyDown.bind(this));
-        }
     }
 
     // SPECIFIC TO THIS SCENE -----------------------------

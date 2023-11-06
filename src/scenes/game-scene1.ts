@@ -77,7 +77,6 @@ export class GameScene1 extends Container implements IScene {
             this.assignAnimation.bind(this),
         );
         uiNext(this.nextScene, parentWidth, parentHeight, this.addChild.bind(this));
-        document.addEventListener("keydown", this.onKeyDown.bind(this));
 
         this.addGoldie(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
@@ -175,15 +174,6 @@ export class GameScene1 extends Container implements IScene {
         // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
         SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
     }
-
-    // Navigation shortcuts
-    onKeyDown(e: KeyboardEvent) {
-        if (e.key === 'ArrowRight') {
-            this.goToNextScene();
-            document.removeEventListener("keydown", this.onKeyDown.bind(this));
-        }
-    }
-
 
     // SPECIFIC TO THIS SCENE -----------------------------
 
