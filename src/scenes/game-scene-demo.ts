@@ -35,18 +35,7 @@ export class GameSceneDemo extends Container implements IScene {
     init(parentWidth: number, parentHeight: number) {
         this.addSky(parentWidth, parentHeight);
         this.addExplosion(parentWidth, parentHeight);
-        this.addMint(parentWidth, parentHeight);
         this.addText(parentWidth, parentHeight);
-    }
-
-    addMint(parentWidth: number, parentHeight: number) {
-        this.mint.anchor.set(0.5);
-        this.mint.position.x = parentWidth * 0.15;
-        this.mint.position.y = parentHeight * 0.5;
-        this.mint.loop = true;
-        this.mint.animationSpeed = 0.2;
-        this.addChild(this.mint);
-        this.mint.play();
     }
 
     addSky(parentWidth: number, parentHeight: number) {

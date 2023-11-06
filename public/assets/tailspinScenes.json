@@ -70,11 +70,12 @@
         "id": "g6",
         "text": "What's that bloody racket? Bloody kids! Playing havoc with his tinnitus.\nSet it off now. Bloody kids! Get the hell out!\nSeeing them freeze like that, eyes wide… he feels bad… more angry…\nJust shut it! Shut it! Get the hell out!\n\nFor Christ's sake, yes, he knows they're only playing - he knows that.\nDo they think he's stupid or something? It's the bloody ringing.",
         "position": [345, 120],
-        "button": [340, 82]
+        "button": [340, 82],
+        "animation": "butch"
       },
       {
         "id": "g7",
-        "text": "He tried a hearing aid once. Never again! Bloody thing made his tinnitus worse - amplified it!\n\nA bloody swindle.",
+        "text": "He tried a hearing aid once. Never again! Bloody thing made his tinnitus worse - amplified it!",
         "position": [512, 410],
         "button": [470, 477]
       },
@@ -82,7 +83,7 @@
         "id": "g8",
         "text": "Explosions!\n\nRun!",
         "position": [736, 450],
-        "button": [480, 484]
+        "button": [910, 523]
       },
       {
         "id": "g9",
@@ -100,7 +101,8 @@
         "id": "j6",
         "text": "It crosses her mind to tell the children to turn the volume down. After all, this a family get together, Sunday lunch, she ought to try to keep the peace… she ought to\n\n...but really, it's not so noisy, is it?",
         "position": [164, 123],
-        "button": [138, 130]
+        "button": [138, 130],
+        "animation": "mint"
       },
       {
         "id": "j7",

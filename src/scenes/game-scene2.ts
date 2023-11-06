@@ -26,6 +26,8 @@ export class GameScene2 extends Container implements IScene {
     sky: Sprite;
     mint: AnimatedSprite;
     mintTextures: Texture[] = [];
+    butch: AnimatedSprite;
+    butchTextures: Texture[] = [];
     explosion: AnimatedSprite;
     explosionTextures: Texture[] = [];
 
@@ -43,6 +45,12 @@ export class GameScene2 extends Container implements IScene {
             this.mintTextures.push(texture)
         }
         this.mint = new AnimatedSprite(this.mintTextures);
+
+        for (let i = 0; i < 6; i++) {
+            const texture = Texture.from(`Butch000${i}`);
+            this.butchTextures.push(texture)
+        }
+        this.butch = new AnimatedSprite(this.butchTextures);
 
         for (let i = 1; i < 28; i++) {
             const texture = Texture.from(`Explosion_Sequence_A ${i}.png`);
@@ -71,6 +79,7 @@ export class GameScene2 extends Container implements IScene {
         // this.addSky(parentWidth, parentHeight);
         this.addExplosion(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
+        this.addButch(parentWidth, parentHeight);
     }
 
     addStoryButton(
@@ -100,13 +109,16 @@ export class GameScene2 extends Container implements IScene {
 
     assignAnimation(fragId: string) {
         switch (fragId) {
-            case 'g2':
-                // return this.goldie;
-            case 'j1':
+            case 'j6':
+                return this.mint;
+            case 'g8':
+                // NOTE: not in orginal scene
+                return this.explosion;
+            case 'g6':
+                return this.butch;
+            // case 'j1':
                 // this.tweenPurrl();
                 // return this.purrl;
-            case 'j2':
-                // return this.mint;
         }
     }
 
@@ -149,7 +161,7 @@ export class GameScene2 extends Container implements IScene {
     }
 
     endScene() {
-        // Cancel the existing timer (if any) and create a new one
+        // Cancel the existing timer (if any) & create a new one
         clearTimeout(this.endSceneTimer);
         this.endSceneTimer = setTimeout(() => {
             gsap.timeline({onComplete: this.goToNextScene})
@@ -162,19 +174,29 @@ export class GameScene2 extends Container implements IScene {
 
     goToNextScene() {
         // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
-        SceneManager.changeScene(new this.nextScene(SceneManager.width, SceneManager.height));
+        SceneManager.changeScene(new GameSceneDemo(SceneManager.width, SceneManager.height));
     }
 
     // SPECIFIC TO THIS SCENE -----------------------------
 
     addMint(parentWidth: number, parentHeight: number) {
         this.mint.anchor.set(0.5);
-        this.mint.position.x = parentWidth * 0.15;
-        this.mint.position.y = parentHeight * 0.5;
+        this.mint.position.x = parentWidth * 0.6;
+        this.mint.position.y = parentHeight - this.mint.height * 0.5;
         this.mint.loop = true;
         this.mint.animationSpeed = 0.2;
-        this.addChild(this.mint);
-        this.mint.play();
+        this.mint.alpha = 0;
+        this.animContainer.addChild(this.mint);
+    }
+
+    addButch(parentWidth: number, parentHeight: number) {
+        this.butch.anchor.set(0.5);
+        this.butch.position.x = parentWidth - this.butch.width * 0.5 - 20;
+        this.butch.position.y = parentHeight * 0.5;
+        this.butch.loop = true;
+        this.butch.animationSpeed = 0.2;
+        this.butch.alpha = 0;
+        this.animContainer.addChild(this.butch);
     }
 
     addSky(parentWidth: number, parentHeight: number) {
@@ -193,12 +215,12 @@ export class GameScene2 extends Container implements IScene {
 
     addExplosion(parentWidth: number, parentHeight: number) {
         this.explosion.anchor.set(0.5);
-        this.explosion.position.x = parentWidth * 0.5;
-        this.explosion.position.y = parentHeight * 0.75;
+        this.explosion.position.x = parentWidth * 0.78;
+        this.explosion.position.y = parentHeight * 0.85;
         this.explosion.loop = false;
         this.explosion.animationSpeed = 0.3;
-        this.addChild(this.explosion);
-        this.explosion.play();
+        this.explosion.alpha = 0;
+        this.animContainer.addChild(this.explosion);
     }
 
     // TODO: methods below from template - do I need them in this app?

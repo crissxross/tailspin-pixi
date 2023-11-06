@@ -159,7 +159,7 @@ export class GameScene1 extends Container implements IScene {
     }
 
     endScene() {
-        // Cancel the existing timer (if any) and create a new one
+        // Cancel the existing timer (if any) & create a new one
         clearTimeout(this.endSceneTimer);
         this.endSceneTimer = setTimeout(() => {
             gsap.timeline({onComplete: this.goToNextScene})
