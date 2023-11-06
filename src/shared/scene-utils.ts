@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { FragmentData, StoryScene } from './story-model';
 import { ScenesConfig } from '../config/scenesConfig';
+import { SceneManager } from './scene-manager';
 
 gsap.registerPlugin(PixiPlugin);
 
@@ -71,5 +72,33 @@ export function checkAllVisited(visitedFragments: number[], index: number, scene
   if (visitedFragments.length === sceneData.fragments.length) {
     return true;
   }
+}
 
+export function uiNext(
+  nextScene: any,
+  parentWidth: number,
+  parentHeight: number,
+  addChild: (child: DisplayObject) => void,
+) {
+    const text = new Text(`>>`, ScenesConfig.uiStyle);
+    text.position.x = parentWidth - text.width - 20;
+    text.position.y = parentHeight - text.height - 10;
+    text.eventMode = 'static';
+    text.cursor = 'pointer';
+    text.on('pointerdown', () => { SceneManager.changeScene(new nextScene(SceneManager.width, SceneManager.height)); });
+    addChild(text);
+}
+
+export function uiPrevious(
+  previousScene: any,
+  parentHeight: number,
+  addChild: (child: DisplayObject) => void,
+) {
+    const text = new Text(`<<`, ScenesConfig.uiStyle);
+    text.position.x = 20;
+    text.position.y = parentHeight - text.height - 10;
+    text.eventMode = 'static';
+    text.cursor = 'pointer';
+    text.on('pointerdown', () => { SceneManager.changeScene(new previousScene(SceneManager.width, SceneManager.height)); });
+    addChild(text);
 }

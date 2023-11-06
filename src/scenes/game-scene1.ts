@@ -4,9 +4,9 @@ import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
 import { FragmentData, StoryScene } from '../shared/story-model';
-import { addSceneData, createStoryButton, checkAllVisited } from '../shared/scene-utils.ts';
+import { addSceneData, createStoryButton, checkAllVisited, uiNext } from '../shared/scene-utils.ts';
+// next scene
 import { GameScene2 } from './game-scene2';
-// import { GameSceneDemo } from './game-scene-demo.ts';
 
 gsap.registerPlugin(PixiPlugin);
 
@@ -18,14 +18,15 @@ export class GameScene1 extends Container implements IScene {
     storyButton!: Graphics;
     sceneData!: StoryScene;
     fragData!: FragmentData;
-    fragText!: Text;
     buttonsContainer: Container;
     animContainer: Container;
     visitedFragments: number[] = [];
     allVisited = false;
     endSceneTimer!: number;
     storyButtonList: Graphics[] = [];
+    nextScene = GameScene2;
 
+    // specific to this scene
     innerEar: Sprite;
     goldie: AnimatedSprite;
     goldieTextures: Texture[] = [];
@@ -69,13 +70,15 @@ export class GameScene1 extends Container implements IScene {
         this.addChild(this.buttonsContainer);
         this.addChild(this.animContainer);
         this.addInnerEar(parentWidth, parentHeight);
-        // this.addSceneData();
         addSceneData(
             this.sceneData,
             this.addChild.bind(this),
             this.addStoryButton.bind(this),
             this.assignAnimation.bind(this),
         );
+        uiNext(this.nextScene, parentWidth, parentHeight, this.addChild.bind(this));
+        document.addEventListener("keydown", this.onKeyDown.bind(this));
+
         this.addGoldie(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
         this.addPurrl(parentWidth, parentHeight);
@@ -149,6 +152,41 @@ export class GameScene1 extends Container implements IScene {
         // }
     }
 
+    updateVisitedFragments(index: number) {
+        if (checkAllVisited(this.visitedFragments, index, this.sceneData)) {
+            this.allVisited = true;
+            console.log('allVisited', this.allVisited);
+        }
+    }
+
+    endScene() {
+        // Cancel the existing timer (if any) and create a new one
+        clearTimeout(this.endSceneTimer);
+        this.endSceneTimer = setTimeout(() => {
+            gsap.timeline({onComplete: this.goToNextScene})
+                .to([this.animContainer, this.buttonsContainer], {
+                    pixi: { alpha: 0 },
+                    duration: 1.5,
+                });
+        }, 2000);
+    }
+
+    goToNextScene() {
+        // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
+        SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
+    }
+
+    // Navigation shortcuts
+    onKeyDown(e: KeyboardEvent) {
+        if (e.key === 'ArrowRight') {
+            this.goToNextScene();
+            document.removeEventListener("keydown", this.onKeyDown.bind(this));
+        }
+    }
+
+
+    // SPECIFIC TO THIS SCENE -----------------------------
+
     addGoldie(parentWidth: number, parentHeight: number) {
         this.goldie.anchor.set(0.5, 1);
         this.goldie.scale.set(0.9);
@@ -214,31 +252,7 @@ export class GameScene1 extends Container implements IScene {
             }, '>1');
     }
 
-    updateVisitedFragments(index: number) {
-        if (checkAllVisited(this.visitedFragments, index, this.sceneData)) {
-            this.allVisited = true;
-            console.log('allVisited', this.allVisited);
-        }
-    }
-
-    endScene() {
-        // Cancel the existing timer (if any) and create a new one
-        clearTimeout(this.endSceneTimer);
-        this.endSceneTimer = setTimeout(() => {
-            gsap.timeline({onComplete: this.goToNextScene})
-                .to([this.animContainer, this.buttonsContainer], {
-                    pixi: { alpha: 0 },
-                    duration: 1.5,
-                });
-        }, 2000);
-    }
-
-    goToNextScene() {
-        // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
-        SceneManager.changeScene(new GameScene2(SceneManager.width, SceneManager.height));
-    }
-
-
+    // TODO: methods below from template - do I need them in this app?
     update(framesPassed: number) {
         // console.log('update framesPassed: ', framesPassed);
     }

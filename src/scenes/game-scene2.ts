@@ -1,19 +1,40 @@
-import { AnimatedSprite, Container, Sprite, Text, TextStyle, Texture } from 'pixi.js';
+import { AnimatedSprite, Assets, Container, Graphics, Sprite, Text, Texture } from 'pixi.js';
+import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 // import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
+import { StoryScene, FragmentData } from '../shared/story-model';
+import { addSceneData, createStoryButton, checkAllVisited, uiNext, uiPrevious } from '../shared/scene-utils.ts';
+// next & previous scenes
 import { GameSceneDemo } from './game-scene-demo';
+import { GameScene1 } from './game-scene1';
 
 export class GameScene2 extends Container implements IScene {
+    storyButton!: Graphics;
+    sceneData!: StoryScene;
+    fragData!: FragmentData;
+    buttonsContainer: Container;
+    animContainer: Container;
+    visitedFragments: number[] = [];
+    allVisited = false;
+    endSceneTimer!: number;
+    storyButtonList: Graphics[] = [];
+    nextScene = GameSceneDemo;
+    previousScene = GameScene1;
+
+    // specific to this scene
     sky: Sprite;
     mint: AnimatedSprite;
     mintTextures: Texture[] = [];
     explosion: AnimatedSprite;
     explosionTextures: Texture[] = [];
-    text!: Text;
 
     constructor(parentWidth: number, parentHeight: number) {
         super();
+
+        this.buttonsContainer = new Container();
+        this.animContainer = new Container();
+
         // initialize/load content
         this.sky = Sprite.from("sky");
 
@@ -29,15 +50,135 @@ export class GameScene2 extends Container implements IScene {
         }
         this.explosion = new AnimatedSprite(this.explosionTextures);
 
-        this.init(parentWidth, parentHeight);
+        Assets.load('assets/tailspinScenes.json').then((data) => {
+            this.sceneData = data[1]; // scene 2
+            this.init(parentWidth, parentHeight);
+        });
     }
 
     init(parentWidth: number, parentHeight: number) {
-        this.addSky(parentWidth, parentHeight);
+        this.addChild(this.buttonsContainer);
+        this.addChild(this.animContainer);
+        addSceneData(
+            this.sceneData,
+            this.addChild.bind(this),
+            this.addStoryButton.bind(this),
+            this.assignAnimation.bind(this),
+        );
+        uiNext(this.nextScene, parentWidth, parentHeight, this.addChild.bind(this));
+        uiPrevious(this.previousScene, parentHeight, this.addChild.bind(this));
+        document.addEventListener("keydown", this.onKeyDown.bind(this));
+
+        // this.addSky(parentWidth, parentHeight);
         this.addExplosion(parentWidth, parentHeight);
         this.addMint(parentWidth, parentHeight);
-        this.addText(parentWidth, parentHeight);
     }
+
+    addStoryButton(
+        index: number, fragment: FragmentData, fragmentText: Text, animation: any
+    ) {
+        const btn = createStoryButton(
+            this.storyButtonList,
+            this.activateFragment.bind(this),
+            this.deactivateFragment.bind(this),
+            this.updateVisitedFragments.bind(this),
+            index,
+            fragment,
+            fragmentText,
+            animation,
+        );
+        this.buttonsContainer.addChild(btn);
+        btn.on('pointerenter', () => {
+            // Cancel the existing timer (if any)
+            clearTimeout(this.endSceneTimer);
+        });
+        btn.on('pointerleave', () => {
+            if (this.allVisited) {
+                this.endScene();
+            }
+        });
+    }
+
+    assignAnimation(fragId: string) {
+        switch (fragId) {
+            case 'g2':
+                // return this.goldie;
+            case 'j1':
+                // this.tweenPurrl();
+                // return this.purrl;
+            case 'j2':
+                // return this.mint;
+        }
+    }
+
+    activateFragment(fragment: FragmentData, fragText: Text, animation: any) {
+        gsap.to(fragText, {
+            pixi: { alpha: 1 },
+            duration: 1,
+        });
+        if (fragment.sounds) {
+            fragment.sounds.forEach(s => sound.play(s));
+        }
+        if (animation) {
+            gsap.to(animation, {
+                pixi: { alpha: 1 },
+                duration: 2,
+            });
+            // play the AnimatedSprite
+            animation.play();
+        }
+        // console.log('visited', fragment.id);
+    }
+
+    deactivateFragment(fragment: FragmentData, fragText: Text, animation: any) {
+        // console.log('deactivateFragment', fragment.id);
+        gsap.to(fragText, {
+            pixi: { alpha: 0 },
+            duration: 1,
+        });
+        // TODO: most/all animations have a finite length and should play through to their end so may not need this
+        // if (animation) {
+        //     animation.stop();
+        // }
+    }
+
+    updateVisitedFragments(index: number) {
+        if (checkAllVisited(this.visitedFragments, index, this.sceneData)) {
+            this.allVisited = true;
+            console.log('allVisited', this.allVisited);
+        }
+    }
+
+    endScene() {
+        // Cancel the existing timer (if any) and create a new one
+        clearTimeout(this.endSceneTimer);
+        this.endSceneTimer = setTimeout(() => {
+            gsap.timeline({onComplete: this.goToNextScene})
+                .to([this.animContainer, this.buttonsContainer], {
+                    pixi: { alpha: 0 },
+                    duration: 1.5,
+                });
+        }, 2000);
+    }
+
+    goToNextScene() {
+        // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
+        SceneManager.changeScene(new this.nextScene(SceneManager.width, SceneManager.height));
+    }
+
+    // Navigation shortcuts
+    onKeyDown(e: KeyboardEvent) {
+        if (e.key === 'ArrowRight') {
+            this.goToNextScene();
+            document.removeEventListener("keydown", this.onKeyDown.bind(this));
+        }
+        if (e.key === 'ArrowLeft') {
+            SceneManager.changeScene(new this.previousScene(SceneManager.width, SceneManager.height));
+            document.removeEventListener("keydown", this.onKeyDown.bind(this));
+        }
+    }
+
+    // SPECIFIC TO THIS SCENE -----------------------------
 
     addMint(parentWidth: number, parentHeight: number) {
         this.mint.anchor.set(0.5);
@@ -73,41 +214,7 @@ export class GameScene2 extends Container implements IScene {
         this.explosion.play();
     }
 
-    addText(parentWidth: number, parentHeight: number) {
-        const style = new TextStyle({
-            fontFamily: "system-ui",
-            fontSize: 30,
-            fontWeight: "bold",
-            align: "center",
-            lineHeight: 50,
-            wordWrap: true,
-            wordWrapWidth: parentWidth * 0.80,
-            fill: ['#ffffff', "hsl(30 100% 80%)"],
-            stroke: "hsl(30 100% 30%)",
-            strokeThickness: 3,
-            dropShadow: true,
-            dropShadowColor: "hsl(0 0% 50% / 0.5)",
-            dropShadowBlur: 4,
-            dropShadowAngle: Math.PI / 6,
-            dropShadowDistance: 2,
-        });
-
-        this.text = new Text(`
-        Scene 2.
-        Click to move on.`,
-        style,
-        );
-
-        this.text.anchor.set(0.5);
-        this.text.position.x = parentWidth * 0.5;
-        this.text.position.y = parentHeight * 0.5;
-        this.text.eventMode = 'static';
-        this.text.cursor = 'pointer';
-        this.text.on('pointerdown', () => { SceneManager.changeScene(new GameSceneDemo(SceneManager.width, SceneManager.height)); });
-
-        this.addChild(this.text);
-    }
-
+    // TODO: methods below from template - do I need them in this app?
     update(framesPassed: number) {
         // console.log('update framesPassed: ', framesPassed);
     }
