@@ -63,50 +63,52 @@
       {
         "id": "g5",
         "text": "He's told them, anything can set it off - loud noises, high-pitched, piercing noises… alarms",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [653, 52],
+        "button": [820, 164]
       },
       {
         "id": "g6",
         "text": "What's that bloody racket? Bloody kids! Playing havoc with his tinnitus.\nSet it off now. Bloody kids! Get the hell out!\nSeeing them freeze like that, eyes wide… he feels bad… more angry…\nJust shut it! Shut it! Get the hell out!\n\nFor Christ's sake, yes, he knows they're only playing - he knows that.\nDo they think he's stupid or something? It's the bloody ringing.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [345, 120],
+        "button": [340, 82],
+        "animation": "butch"
       },
       {
         "id": "g7",
-        "text": "He tried a hearing aid once. Never again! Bloody thing made his tinnitus worse - amplified it!\n\nA bloody swindle.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "text": "He tried a hearing aid once. Never again! Bloody thing made his tinnitus worse - amplified it!",
+        "position": [512, 410],
+        "button": [470, 477]
       },
       {
         "id": "g8",
         "text": "Explosions!\n\nRun!",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [736, 450],
+        "button": [910, 523]
       },
       {
         "id": "g9",
         "text": "The day he joined the air cadets, he was on cloud nine.\nHe told his Mam, he was going to be a pilot.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [266, 303],
+        "button": [232, 344]
       },
       {
         "id": "j5",
         "text": "She tries to talk to him again about a hearing aid - the digital ones...\nWas that a flicker of interest in his face?\nMaybe…\nNo.\nHe's angry. Why? She's only trying to help.\n\nWhy does he never listen to her?",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [415, 167],
+        "button": [794, 333]
       },
       {
         "id": "j6",
         "text": "It crosses her mind to tell the children to turn the volume down. After all, this a family get together, Sunday lunch, she ought to try to keep the peace… she ought to\n\n...but really, it's not so noisy, is it?",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [164, 123],
+        "button": [138, 130],
+        "animation": "mint"
       },
       {
         "id": "j7",
         "text": "War films - out of all the films for grownups, they're her favourites. She likes musicals too, but war films, the ones with fighter planes, like what Daddy did, are best. She watches them on the telly in winter, lying on the rug in front of the crackling fire.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [58, 420],
+        "button": [300, 617]
       }
     ]
   },
@@ -116,50 +118,50 @@
       {
         "id": "g10",
         "text": "He's running, running to the burning plane\neveryone's running\nstand back! some one shouts\nbut he wasn't going any closer\nhe's just a fitter",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [200, 544],
+        "button": [275, 502]
       },
       {
         "id": "g11",
         "text": "What's wrong with books? Don't kids read books anymore... quietly?\nWhy doesn't she make them stop playing with that blasted toy?",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [77, 148],
+        "button": [180, 105]
       },
       {
         "id": "g12",
         "text": "Kids these days! No idea how to behave at the dinner table. For Christ's sake! That's not how she was brought up. Quiet at meal times.\nWhat's Edna talking about now with them two? The three of them, thick as thieves. What's that they're saying? What are they planning now? He might as well be bloody invisible.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [678, 54],
+        "button": [626, 98]
       },
       {
         "id": "g13",
         "text": "Hearing aids? A bloody swindle. Salesmen, out to line their pockets. Don't they understand? Bloody thing made his tinnitus worse - amplified it! Never again! He won't be conned again.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [210, 326],
+        "button": [100, 558]
       },
       {
         "id": "g14",
         "text": "He shouts\n\nit's a blessed relief to shout\n\nspit fire to stop it dead",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [700, 232],
+        "button": [945, 370]
       },
       {
         "id": "j8",
         "text": "He won't even entertain the idea of a hearing aid. What more can she do to explain? She's shown him the pictures - how discrete it is. It's infuriating. Doesn't make sense. It makes her so mad it\n\nhurts.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [278, 251],
+        "button": [637, 627]
       },
       {
         "id": "j9",
         "text": "She sits in her place around the dining table, acutely aware of her father sitting next to her. She's on his bad side, his deaf side - the place she's always sat since childhood. Her husband, Mark's on his good side.\n\nShe keeps the conversation flowing with Mark and her mother, in that direction only, as if there's a blank side on her right - a blank wall. She's aware she's doing it, but she doesn't stop herself. She thinks she can't.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [355, 240],
+        "button": [554, 192]
       },
       {
         "id": "j10",
         "text": "It's fun playing with the new telephone - she likes putting her fingers in the holes to dial the numbers and pretending to answer the way Mummy does - Hello, this is the Foster residen…\n\nStop playing silly buggers! Daddy shouts at her.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [535, 263],
+        "button": [750, 473]
       }
     ]
   },
@@ -169,50 +171,50 @@
       {
         "id": "g15",
         "text": "Try to keep a lid on it. Keep it buttoned. He eats the Sunday roast without tasting it.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [670, 271],
+        "button": [805, 377]
       },
       {
         "id": "g16",
         "text": "unfit for flying\nbetter be a fitter\ndashed hopes\ncrushed/crashed*",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [720, 180],
+        "button": [920, 154]
       },
       {
         "id": "g17",
         "text": "He hears snatches of their conversation, sees their smiles. He can't piece things together. What's the point? What's the bloody point? Their smiles - exchanging smiles between themselves. He cuts into his roast beef. Interrupts, demands salt, more gravy, potatoes, cabbage…. They hand him stuff and carry on talking.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [38, 498],
+        "button": [344, 455]
       },
       {
         "id": "g18",
         "text": "The child cries…\nbut when he was a boy no one ever came to him when he cried",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [168, 273],
+        "button": [212, 395]
       },
       {
         "id": "g19",
         "text": "He'd spend hours making model aeroplanes\nlistening to the radio\nmaking model planes\ndreaming of flying",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [414, 440],
+        "button": [505, 627]
       },
       {
         "id": "j11",
         "text": "Never listens to her. Never has.\nAlways: Shut up… Go away… Be quiet…\nAs if her presence was painful to him\n…and she was always so quiet (as a mouse).\nShe knew better than to scream and squeal.\n\nNot that she couldn't have fun… to be fair\nHe could be fun too.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [44, 40],
+        "button": [357, 240]
       },
       {
         "id": "j12",
         "text": "A sharp hissing word. Janet turns and catches a glimpse of hateful anger on her father's face. He was looking at Chloe. She sees fear in her youngest child and the mystifying shame of having provoked such wrath. But it's only there for a moment. Gone now… all gone.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [398, 266],
+        "button": [707, 508]
       },
       {
         "id": "j13",
         "text": "Daddy's always reading books about fighter pilots and sometimes he tells her stories from them…\nwell mainly he tells Mummy, but she listens too. He says it's a miracle they lived to tell the tale.\n\nBut her favourite wartime stories are the funny ones, like his heroic battle against bedbugs in some hot sandy country.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [430, 137],
+        "button": [648, 102]
       }
     ]
   },
@@ -222,50 +224,50 @@
       {
         "id": "g20",
         "text": "They'd complain if he started reading his book now… World War II biographies - RAF are his favourite, of course - and autobiographies, he prefers them… It's a miracle they lived to tell the tale. He's read them all. He's read them all.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [676, 403],
+        "button": [895, 621]
       },
       {
         "id": "g21",
         "text": "He can't ignore how many don't come back - working on Spitfires, the damage they sustain, the holes he has to patch…\n\nBloody glad he doesn't fly this crate - but keep a lid on it\ncareless whispers…",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [519, 277],
+        "button": [652, 226]
       },
       {
         "id": "g22",
         "text": "He still dreams of flying a glider - peaceful quiet flight, like the birds",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [504, 72],
+        "button": [446, 124]
       },
       {
         "id": "g23",
         "text": "Turn a deaf ear. Ignore it and maybe it'll go away… go away\n\n…go away",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [92, 379],
+        "button": [148, 535]
       },
       {
         "id": "g24",
         "text": "Defensive fire\npreemptive strikes\nshout before things get out of control",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [226, 451],
+        "button": [344, 592]
       },
       {
         "id": "j14",
         "text": "He can't hear birdsong anymore. Why does her mother always mention this? As if that's an important thing?",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [440, 536],
+        "button": [614, 490]
       },
       {
         "id": "j15",
         "text": "Janet talks about the new treatment for Tinnitus she read about on the internet.\nHe's listening. Is he listening for once?\nShe turns to him, tries to explain.\nBut no - objections, one after the other, won't give her a fair hearing.\n\nListen to me!\n\nHer argument shot down in flames.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [176, 212],
+        "button": [112, 232]
       },
       {
         "id": "j16",
         "text": "She's bored. Can't see a thing through Daddy's binoculars, just blank sky. What's there to see anyway? Just birds flying around. They don't do anything… but fly. It's boring.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [693, 101],
+        "button": [972, 290]
       }
     ]
   },
@@ -275,50 +277,50 @@
       {
         "id": "g25",
         "text": "He tells them about the book he's reading on the Battle of Britain. They listen for a while…\n\nEdna starts to clear the table. Janet fusses over the kids. A glass of juice falls over.\n\nHe spits fire",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [661, 150],
+        "button": [947, 103]
       },
       {
         "id": "g26",
         "text": "Alarm!\nThere's a pilot trapped in burning plane\n screaming for his mother\nMust've pranged on take off",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [479, 195  ],
+        "button": [544, 150]
       },
       {
         "id": "g27",
         "text": "He picked up the lingo,\ncopied their accents\n\nGood old Blighty!",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [80, 119],
+        "button": [84, 130]
       },
       {
         "id": "g28",
         "text": "A hero feels no shame. Is that why he didn't make the grade?\nA fighter pilot is shame free\nThat's a hero\n\nbut 9 times out of 10, a dead hero",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [328, 368],
+        "button": [540, 592]
       },
       {
         "id": "g29",
         "text": "Frightened\nbut shameful to feel so much fear\nashamed\nHe fears the shame",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [716, 490],
+        "button": [922, 432]
       },
       {
         "id": "j17",
         "text": "Doubts… thoughts she wants to erase. Should she protect them more, Lauren and Chloe, from his anger? Should she?\n\nBut it doesn't do them any harm, not really. Does it? Only frightens them for moment. No lasting damage. They're not with him everyday… not like she was",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [138, 310],
+        "button": [262, 568]
       },
       {
         "id": "j18",
         "text": "Words like bullets. What's the matter now? He wouldn't treat strangers like this. That's what she resents.\n\nLet the children play. Play!\n\nplaying with fire",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [359, 249],
+        "button": [680, 433]
       },
       {
         "id": "j19",
         "text": "When Daddy was a boy he built model aeroplanes because in the war he was a fighter pilot… like she's seen on the films…\n\nBut wait... He was nothing more than an aircraft fitter.\nIt's not that he lied, he didn't lie to her, she just assumed...\n\nDaddy was a hero.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [62, 264],
+        "button": [290, 224]
       }
     ]
   },
@@ -328,50 +330,54 @@
       {
         "id": "g30",
         "text": "Perfect soundless flight\ngliding in the blue blue\nsky like the birds\n\nglide to silencing peace",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [755, 77],
+        "button": [842, 330]
       },
       {
         "id": "g31",
         "text": "If not for the grace of...\n\ncowardly relief\nhe failed\nthank God\nfor his dud ear",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [61, 69],
+        "button": [294, 248]
       },
       {
         "id": "g32",
         "text": "Shooting them down with his angry words\nhe hurts them, frightens them - he can see that\nbut he can't stop",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [603, 61],
+        "button": [540, 108]
       },
       {
         "id": "g33",
         "text": "He can do nothing\ncan't help.\nHe watches the boy trapped\n in the burning plane\n\nscreaming for his mother",
-        "position": [0, 0],
-        "button": [0, 0]
-      },
-      {
-        "id": "g34",
-        "text": "Safe. Keep safe.\nDeaf is safe. Thank God!\n\nHearing = death\n\nHang onto deafness for dear life!",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [103, 340],
+        "button": [318, 510]
       },
       {
         "id": "j20",
         "text": "He drops the salt cellar. She looks at him and is pierced by a shard of tenderness.\nHe looks so vulnerable… lonely.\n\nA phantom limb, a hand reaches out to him… It could be her own…\nIt could be…\n\nBut there's a block - a red hot burning block in the way.\nShe can't shift it. Hides behind it. Guards it jealously. After all…\nit's her rightful legacy.\n\nThat's what she believes and she's not giving up on that.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [412, 286],
+        "button": [628, 233]
       },
       {
         "id": "j21",
         "text": "She takes the girls into the other room.\nLeave him in peace, that's the best thing.\n\nLeave him alone.",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [690, 422],
+        "button": [895, 592]
       },
       {
         "id": "j22",
         "text": "Up, up and away! Daddy always gets the kite flying high… making it swoop and dive… It's not fair! every time she takes the string it nosedives and prangs\n\n…but Daddy gets it flying again… Up, up and away!",
-        "position": [0, 0],
-        "button": [0, 0]
+        "position": [456, 424],
+        "button": [685, 618]
+      }
+    ]
+  },
+  {
+    "scene": 8,
+    "fragments": [
+      {
+        "id": "g34",
+        "text": "Hang onto deafness for dear life!",
+        "position": [580, 28]
       }
     ]
   }
