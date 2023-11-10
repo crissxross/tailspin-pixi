@@ -2,6 +2,7 @@ import { Container, Assets, utils } from 'pixi.js'
 // import { LoadingBarContainer } from '../containers/loading-bar-container';
 import { SceneManager, IScene } from '../shared/scene-manager';
 import { GameScene1 } from './game-scene1';
+import { Scene1 } from './scene1';
 import { manifest } from '../config/manifest';
 import { gsap } from "gsap";
 
@@ -37,7 +38,8 @@ export class LoaderScene extends Container implements IScene {
     }
 
     private loaded(): void {
-        SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height));
+        // SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height));
+        SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0));
 
         const tl = gsap.timeline({onComplete: this.removeStuff});
         tl.to('.game-title', {duration: 1, autoAlpha: 0, ease: "power2.out"});
