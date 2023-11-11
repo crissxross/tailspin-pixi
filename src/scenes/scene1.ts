@@ -6,6 +6,8 @@ import { IScene, SceneManager } from '../shared/scene-manager';
 import { FragmentData, StoryScene } from '../shared/story-model';
 import { ScenesConfig } from '../config/scenesConfig';
 import { BaseScene } from './base-scene';
+// next scene
+import { GameScene2 } from './game-scene2';
 
 export class Scene1 extends BaseScene {
   // specific to this scene
@@ -16,9 +18,10 @@ export class Scene1 extends BaseScene {
   mintTextures: Texture[] = [];
   purrl: AnimatedSprite;
   purrlTextures: Texture[] = [];
+  nextScene = GameScene2;
 
-  constructor(parentWidth: number, parentHeight: number, scNum: number) {
-    super(parentWidth, parentHeight, scNum);
+  constructor(parentWidth: number, parentHeight: number, scNum: number, nextScene: any) {
+    super(parentWidth, parentHeight, scNum, nextScene);
 
     this.innerEar = Sprite.from("innerEar");
 
@@ -50,7 +53,14 @@ export class Scene1 extends BaseScene {
     this.addGoldie(parentWidth, parentHeight);
     this.addMint(parentWidth, parentHeight);
     this.addPurrl(parentWidth, parentHeight);
+
     console.log('storyButtonList', this.storyButtonList);
+    console.log('sceneData', this.sceneData);
+
+    this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
+      const animation = this.assignAnimation(fragment.id);
+      // console.log('animation for index', i, animation);
+    });
   }
 
   assignAnimation(fragId: string) {
@@ -63,7 +73,14 @@ export class Scene1 extends BaseScene {
         case 'j2':
             return this.mint;
     }
-}
+  }
+
+
+
+
+
+
+
 
   // SPECIFIC TO THIS SCENE -----------------------------
 

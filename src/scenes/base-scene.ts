@@ -22,16 +22,18 @@ export class BaseScene extends Container implements IScene {
   allVisited = false;
   endSceneTimer!: number;
   storyButtonList: Graphics[] = [];
+  nextScene: any;
 
-  constructor(parentWidth: number, parentHeight: number, scNum: number) {
-      super();
+  constructor(parentWidth: number, parentHeight: number, scNum: number, nextScene: any) {
+    super();
 
-      this.buttonsContainer = new Container();
-      this.animContainer = new Container();
+    this.buttonsContainer = new Container();
+    this.animContainer = new Container();
+    this.nextScene = nextScene;
 
-      Assets.load('assets/tailspinScenes.json').then((data) => {
-        this.sceneData = data[scNum];
-        this.init(parentWidth, parentHeight);
+    Assets.load('assets/tailspinScenes.json').then((data) => {
+      this.sceneData = data[scNum];
+      this.init(parentWidth, parentHeight);
     });
   }
 
@@ -69,6 +71,8 @@ export class BaseScene extends Container implements IScene {
     storyButton.on('pointerenter', () => {
       this.activateFragment(fragment, fragmentText);
       this.updateVisitedFragments(index);
+      // Cancel the existing timer (if any)
+      clearTimeout(this.endSceneTimer);
     });
     // DEACTIVATE story fragment
     storyButton.on('pointerleave', () => {
@@ -78,6 +82,9 @@ export class BaseScene extends Container implements IScene {
         pixi: { alpha: 0.6 },
         duration: 0.5,
       });
+      if (this.allVisited) {
+        this.endScene(this.nextScene);
+      }
     });
     // return storyButton;
     // OR...
