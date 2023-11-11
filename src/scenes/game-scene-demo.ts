@@ -2,7 +2,8 @@ import { AnimatedSprite, Container, Sprite, Text, TextStyle, Texture } from 'pix
 import { gsap } from "gsap";
 // import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
-import { GameScene1 } from './game-scene1';
+import { Scene1 } from './scene1';
+import { Scene2 } from './scene2';
 
 export class GameSceneDemo extends Container implements IScene {
     sky: Sprite;
@@ -92,7 +93,7 @@ export class GameSceneDemo extends Container implements IScene {
         this.text.position.y = parentHeight * 0.5;
         this.text.eventMode = 'static';
         this.text.cursor = 'pointer';
-        this.text.on('pointerdown', () => { SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height)); });
+        this.text.on('pointerdown', () => { SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, Scene2)); });
 
         this.addChild(this.text);
     }

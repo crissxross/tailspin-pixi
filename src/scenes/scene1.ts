@@ -1,16 +1,11 @@
-import { AnimatedSprite, Assets, Container, DisplayObject, Graphics, Sprite, Text, Texture } from 'pixi.js';
-import { sound } from "@pixi/sound";
+import { AnimatedSprite, Sprite, Texture } from 'pixi.js';
 import { gsap } from "gsap";
-import { PixiPlugin } from "gsap/PixiPlugin";
-import { IScene, SceneManager } from '../shared/scene-manager';
-import { FragmentData, StoryScene } from '../shared/story-model';
-import { ScenesConfig } from '../config/scenesConfig';
+import { FragmentData } from '../shared/story-model';
 import { BaseScene } from './base-scene';
 // next scene
-import { GameScene2 } from './game-scene2';
+import { Scene2 } from './scene2';
 
 export class Scene1 extends BaseScene {
-  // specific to this scene
   innerEar: Sprite;
   goldie: AnimatedSprite;
   goldieTextures: Texture[] = [];
@@ -18,10 +13,10 @@ export class Scene1 extends BaseScene {
   mintTextures: Texture[] = [];
   purrl: AnimatedSprite;
   purrlTextures: Texture[] = [];
-  nextScene = GameScene2;
+  nextScene = Scene2;
 
-  constructor(parentWidth: number, parentHeight: number, scNum: number, nextScene: any) {
-    super(parentWidth, parentHeight, scNum, nextScene);
+  constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any) {
+    super(parentWidth, parentHeight, scIndex, nextScene);
 
     this.innerEar = Sprite.from("innerEar");
 
@@ -54,12 +49,16 @@ export class Scene1 extends BaseScene {
     this.addMint(parentWidth, parentHeight);
     this.addPurrl(parentWidth, parentHeight);
 
-    console.log('storyButtonList', this.storyButtonList);
-    console.log('sceneData', this.sceneData);
+    this.addStoryBtnAnimation();
+  }
 
+  addStoryBtnAnimation() {
     this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
       const animation = this.assignAnimation(fragment.id);
-      // console.log('animation for index', i, animation);
+      // console.log('storyButtons index', i, this.storyButtons[i], 'animation for', i, animation);
+      this.storyButtons[i].on('pointerenter', () => {
+        if (animation) this.activateFragmentAnimation(animation);
+      });
     });
   }
 
@@ -75,14 +74,22 @@ export class Scene1 extends BaseScene {
     }
   }
 
+  activateFragmentAnimation(animation: any) {
+    gsap.to(animation, {
+      pixi: { alpha: 1 },
+      duration: 2,
+    });
+    // play the AnimatedSprite
+    animation.play();
+  }
+
+  // TODO: do I need to reactivate any animations?
+
+  // TODO: check that all animations have a finite length and will play through to their end (or end of scene). If not, add:
+  // deactivateFragmentAnimation(animation: any) {}
 
 
-
-
-
-
-
-  // SPECIFIC TO THIS SCENE -----------------------------
+  // SCENE SPECIFIC artwork & animation
 
   addGoldie(parentWidth: number, parentHeight: number) {
     this.goldie.anchor.set(0.5, 1);

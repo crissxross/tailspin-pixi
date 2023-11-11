@@ -1,4 +1,4 @@
-import { AnimatedSprite, Assets, Container, DisplayObject, Graphics, Sprite, Text, Texture } from 'pixi.js';
+import { Assets, Container, DisplayObject, Graphics, Text } from 'pixi.js';
 import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
@@ -21,18 +21,24 @@ export class BaseScene extends Container implements IScene {
   visitedFragments: number[] = [];
   allVisited = false;
   endSceneTimer!: number;
-  storyButtonList: Graphics[] = [];
+  storyButtons: Graphics[] = [];
   nextScene: any;
+  // scIndex: number;
+  nextSceneIndex!: number;
 
-  constructor(parentWidth: number, parentHeight: number, scNum: number, nextScene: any) {
+  constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any) {
     super();
 
     this.buttonsContainer = new Container();
     this.animContainer = new Container();
     this.nextScene = nextScene;
+    // this.scIndex = scIndex;
+    this.nextSceneIndex = scIndex + 1;
+    console.log('scIndex', scIndex);
+    console.log('nextSceneIndex', this.nextSceneIndex);
 
     Assets.load('assets/tailspinScenes.json').then((data) => {
-      this.sceneData = data[scNum];
+      this.sceneData = data[scIndex];
       this.init(parentWidth, parentHeight);
     });
   }
@@ -44,26 +50,23 @@ export class BaseScene extends Container implements IScene {
   }
 
   addSceneData() {
-    console.log('scene number', this.sceneData.scene);
+    // console.log('scene number', this.sceneData.scene);
     // populate scene with fragments with their story activation buttons
-    // TODO: add animation to each fragment
     this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
       const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
       fragmentText.position.set(fragment.position[0], fragment.position[1]);
       fragmentText.alpha = 0;
 
       this.addChild(fragmentText);
-      // this.addStoryButton(i, fragment, fragmentText);
-      // OR...
       this.createStoryButton(i, fragment, fragmentText);
     });
   }
 
-  createStoryButton(index: number, fragment: FragmentData, fragmentText: Text) {
+  createStoryButton(index: number, fragment: FragmentData, fragmentText: Text,) {
     const storyButton = new Graphics()
       .beginFill('hsl(204 30% 70% / 0.4)')
       .drawCircle(0, 0, 30);
-    this.storyButtonList.push(storyButton);
+    this.storyButtons.push(storyButton);
     storyButton.position.set(fragment.button[0], fragment.button[1]);
     storyButton.eventMode = 'static';
     storyButton.cursor = 'pointer';
@@ -78,25 +81,16 @@ export class BaseScene extends Container implements IScene {
     storyButton.on('pointerleave', () => {
       this.deactivateFragment(fragment, fragmentText);
       // show story button as visited
-      gsap.to(this.storyButtonList[index], {
+      gsap.to(this.storyButtons[index], {
         pixi: { alpha: 0.6 },
         duration: 0.5,
       });
       if (this.allVisited) {
-        this.endScene(this.nextScene);
+        this.endScene(this.nextScene, this.nextSceneIndex);
       }
     });
-    // return storyButton;
-    // OR...
     this.buttonsContainer.addChild(storyButton);
   }
-
-  addStoryButton(index: number, fragment: FragmentData, fragmentText: Text) {
-    // Do I need this method?
-  }
-
-  // Not sure I can do this in base class
-  // assignAnimation() {}
 
   activateFragment(fragment: FragmentData, fragText: Text) {
     gsap.to(fragText, {
@@ -133,11 +127,12 @@ export class BaseScene extends Container implements IScene {
     }
   }
 
-  endScene(nextScene: any) {
+  endScene(nextScene: any, nextIndex: number) {
+    console.log('endScene nextScene:', nextScene);
     // Cancel the existing timer (if any) & create a new one
     clearTimeout(this.endSceneTimer);
     this.endSceneTimer = setTimeout(() => {
-        gsap.timeline({onComplete: this.goToNextScene, onCompleteParams: [nextScene]})
+        gsap.timeline({onComplete: this.goToNextScene, onCompleteParams: [nextScene, nextIndex]})
             .to([this.animContainer, this.buttonsContainer], {
                 pixi: { alpha: 0 },
                 duration: 1.5,
@@ -145,10 +140,12 @@ export class BaseScene extends Container implements IScene {
     }, 2000);
   }
 
-  goToNextScene(nextScene: any) {
+  goToNextScene(nextScene: any, nextIndex: number) {
+    console.log('goToNextScene nextIndex', nextIndex);
     // TODO: remove any event listeners, kill any animations & fade out & stop any sounds
-    SceneManager.changeScene(new nextScene(SceneManager.width, SceneManager.height));
+    SceneManager.changeScene(new nextScene(SceneManager.width, SceneManager.height, nextIndex, nextScene));
   }
+  // TODO: should I rename the nextScene param to (copilot suggested) nextSceneClass?
 
   uiNext(nextScene: any, parentWidth: number, parentHeight: number,) {
     const text = new Text(`>>`, ScenesConfig.uiStyle);

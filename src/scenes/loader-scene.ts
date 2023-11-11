@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { manifest } from '../config/manifest';
 import { Scene1 } from './scene1';
 // next scene
-import { GameScene2 } from './game-scene2';
+import { Scene2 } from './scene2';
 
 // TODO: commented out _loadingBar stuff because it's buggy. Using a simple CSS loading spinner instead
 
@@ -40,7 +40,7 @@ export class LoaderScene extends Container implements IScene {
 
     private loaded(): void {
         // SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height));
-        SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, GameScene2));
+        SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, Scene2));
 
         const tl = gsap.timeline({onComplete: this.removeStuff});
         tl.to('.game-title', {duration: 1, autoAlpha: 0, ease: "power2.out"});
