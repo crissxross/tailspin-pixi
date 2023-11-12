@@ -51,7 +51,9 @@ export class Scene1 extends BaseScene {
 
     this.addStoryBtnAnimation();
     // quick nav button
-    this.uiNext(this.nextScene, this.nextSceneIndex, parentWidth, parentHeight);
+    if (this.nextSceneIndex !== undefined){
+      this.uiNext(this.nextScene, this.nextSceneIndex, parentWidth, parentHeight);
+    }
   }
 
   addStoryBtnAnimation() {

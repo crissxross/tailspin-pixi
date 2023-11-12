@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { FragmentData } from '../shared/story-model';
 import { BaseScene } from './base-scene';
 // next & previous scenes
-import { GameSceneDemo } from './game-scene-demo';
+import { Scene3 } from './scene3';
 import { Scene1 } from './scene1';
 
 export class Scene2 extends BaseScene {
@@ -14,7 +14,7 @@ export class Scene2 extends BaseScene {
   butchTextures: Texture[] = [];
   explosion: AnimatedSprite;
   explosionTextures: Texture[] = [];
-  nextScene = GameSceneDemo;
+  nextScene = Scene3;
   previousScene = Scene1;
 
   constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any, previousScene?: any) {
@@ -53,7 +53,9 @@ export class Scene2 extends BaseScene {
 
     this.addStoryBtnAnimation();
     // quick nav buttons
-    this.uiNext(this.nextScene, this.nextSceneIndex, parentWidth, parentHeight);
+    if (this.nextSceneIndex !== undefined){
+      this.uiNext(this.nextScene, this.nextSceneIndex, parentWidth, parentHeight);
+    }
     if (this.previousSceneIndex !== undefined){
       this.uiPrevious(this.previousScene, this.previousSceneIndex, parentHeight);
     }

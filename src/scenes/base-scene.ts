@@ -22,8 +22,8 @@ export class BaseScene extends Container implements IScene {
   allVisited = false;
   endSceneTimer!: number;
   storyButtons: Graphics[] = [];
-  nextScene: any;
-  nextSceneIndex!: number;
+  nextScene: any | undefined;
+  nextSceneIndex!: number | undefined;
   previousScene: any | undefined;
   previousSceneIndex!: number | undefined;
 
@@ -53,15 +53,20 @@ export class BaseScene extends Container implements IScene {
   }
 
   addSceneData() {
-    // populate scene with fragments with their story activation buttons
-    this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
-      const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
-      fragmentText.position.set(fragment.position[0], fragment.position[1]);
-      fragmentText.alpha = 0;
+    if (this.sceneData.scene <= 8) {
+      console.log('scenedata scene number', this.sceneData.scene);
+      // populate scene with fragments with their story activation buttons
+      this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
+        const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
+        fragmentText.position.set(fragment.position[0], fragment.position[1]);
+        fragmentText.alpha = 0;
 
-      this.addChild(fragmentText);
-      this.createStoryButton(i, fragment, fragmentText);
-    });
+        this.addChild(fragmentText);
+        this.createStoryButton(i, fragment, fragmentText);
+      });
+    } else {
+      console.log('END OF SCENES');
+    }
   }
 
   createStoryButton(index: number, fragment: FragmentData, fragmentText: Text,) {
@@ -87,7 +92,7 @@ export class BaseScene extends Container implements IScene {
         pixi: { alpha: 0.6 },
         duration: 0.5,
       });
-      if (this.allVisited) {
+      if (this.allVisited && this.nextSceneIndex !== undefined) {
         this.endScene(this.nextScene, this.nextSceneIndex);
       }
     });
@@ -128,7 +133,7 @@ export class BaseScene extends Container implements IScene {
   }
 
   endScene(nextScene: any, nextIndex: number) {
-    console.log('endScene nextScene:', nextScene);
+    console.log('endScene nextIndex:', nextIndex);
     // Cancel the existing timer (if any) & create a new one
     clearTimeout(this.endSceneTimer);
     this.endSceneTimer = setTimeout(() => {
@@ -148,7 +153,7 @@ export class BaseScene extends Container implements IScene {
   // TODO: should I rename the nextScene param to (copilot suggested) nextSceneClass?
 
   uiNext(nextScene: any, nextIndex: number, parentWidth: number, parentHeight: number,) {
-    if (nextIndex > this.sceneData.fragments.length - 1) return;
+    if (nextIndex > this.sceneData.fragments.length) return;
     const text = new Text(`>>`, ScenesConfig.uiStyle);
     text.position.x = parentWidth - text.width - 20;
     text.position.y = parentHeight - text.height - 10;
