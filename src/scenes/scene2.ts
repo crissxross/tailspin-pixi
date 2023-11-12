@@ -15,9 +15,10 @@ export class Scene2 extends BaseScene {
   explosion: AnimatedSprite;
   explosionTextures: Texture[] = [];
   nextScene = GameSceneDemo;
+  previousScene = Scene1;
 
-  constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any) {
-    super(parentWidth, parentHeight, scIndex, nextScene);
+  constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any, previousScene?: any) {
+    super(parentWidth, parentHeight, scIndex, nextScene, previousScene);
 
     this.sky = Sprite.from("sky");
 
@@ -51,6 +52,11 @@ export class Scene2 extends BaseScene {
     this.addExplosion(parentWidth, parentHeight);
 
     this.addStoryBtnAnimation();
+    // quick nav buttons
+    this.uiNext(this.nextScene, this.nextSceneIndex, parentWidth, parentHeight);
+    if (this.previousSceneIndex !== undefined){
+      this.uiPrevious(this.previousScene, this.previousSceneIndex, parentHeight);
+    }
   }
 
   addStoryBtnAnimation() {

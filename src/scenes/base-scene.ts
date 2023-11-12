@@ -23,19 +23,22 @@ export class BaseScene extends Container implements IScene {
   endSceneTimer!: number;
   storyButtons: Graphics[] = [];
   nextScene: any;
-  // scIndex: number;
   nextSceneIndex!: number;
+  previousScene: any | undefined;
+  previousSceneIndex!: number | undefined;
 
-  constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any) {
+  constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any, previousScene?: any) {
     super();
 
     this.buttonsContainer = new Container();
     this.animContainer = new Container();
     this.nextScene = nextScene;
-    // this.scIndex = scIndex;
     this.nextSceneIndex = scIndex + 1;
+    this.previousScene = scIndex > 0 ? previousScene : undefined;
+    this.previousSceneIndex = scIndex > 0 ? scIndex - 1 : undefined;
     console.log('scIndex', scIndex);
     console.log('nextSceneIndex', this.nextSceneIndex);
+    console.log('previousSceneIndex', this.previousSceneIndex);
 
     Assets.load('assets/tailspinScenes.json').then((data) => {
       this.sceneData = data[scIndex];
@@ -50,7 +53,6 @@ export class BaseScene extends Container implements IScene {
   }
 
   addSceneData() {
-    // console.log('scene number', this.sceneData.scene);
     // populate scene with fragments with their story activation buttons
     this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
       const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
@@ -100,11 +102,9 @@ export class BaseScene extends Container implements IScene {
     if (fragment.sounds) {
         fragment.sounds.forEach(s => sound.play(s));
     }
-    // console.log('visited', fragment.id);
   }
 
   deactivateFragment(fragment: FragmentData, fragText: Text) {
-    // console.log('deactivateFragment', fragment.id);
     gsap.to(fragText, {
       pixi: { alpha: 0 },
       duration: 1,
@@ -114,7 +114,7 @@ export class BaseScene extends Container implements IScene {
   checkAllVisited(visitedFragments: number[], index: number, sceneData: StoryScene) {
     if(visitedFragments.includes(index)) return;
     visitedFragments.push(index);
-    console.log('visitedFragments', visitedFragments);
+    // console.log('visitedFragments', visitedFragments);
     if (visitedFragments.length === sceneData.fragments.length) {
       return true;
     }
@@ -147,23 +147,25 @@ export class BaseScene extends Container implements IScene {
   }
   // TODO: should I rename the nextScene param to (copilot suggested) nextSceneClass?
 
-  uiNext(nextScene: any, parentWidth: number, parentHeight: number,) {
+  uiNext(nextScene: any, nextIndex: number, parentWidth: number, parentHeight: number,) {
+    if (nextIndex > this.sceneData.fragments.length - 1) return;
     const text = new Text(`>>`, ScenesConfig.uiStyle);
     text.position.x = parentWidth - text.width - 20;
     text.position.y = parentHeight - text.height - 10;
     text.eventMode = 'static';
     text.cursor = 'pointer';
-    text.on('pointerdown', () => { SceneManager.changeScene(new nextScene(SceneManager.width, SceneManager.height)); });
+    text.on('pointerdown', () => { SceneManager.changeScene(new nextScene(SceneManager.width, SceneManager.height, nextIndex, nextScene)); });
     this.addChild(text);
   }
 
-  uiPrevious(previousScene: any, parentHeight: number,) {
+  uiPrevious(previousScene: any, previousIndex: number, parentHeight: number,) {
+    if (previousIndex < 0) return;
     const text = new Text(`<<`, ScenesConfig.uiStyle);
     text.position.x = 20;
     text.position.y = parentHeight - text.height - 10;
     text.eventMode = 'static';
     text.cursor = 'pointer';
-    text.on('pointerdown', () => { SceneManager.changeScene(new previousScene(SceneManager.width, SceneManager.height)); });
+    text.on('pointerdown', () => { SceneManager.changeScene(new previousScene(SceneManager.width, SceneManager.height, previousIndex, previousScene)); });
     this.addChild(text);
   }
 
