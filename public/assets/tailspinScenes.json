@@ -377,7 +377,8 @@
       {
         "id": "g34",
         "text": "Hang onto deafness for dear life!",
-        "position": [580, 28]
+        "position": [580, 28],
+        "button": [550, 28]
       }
     ]
   }
