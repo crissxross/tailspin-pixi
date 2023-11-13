@@ -53,14 +53,13 @@ export class BaseScene extends Container implements IScene {
   }
 
   addSceneData() {
-    if (this.sceneData.scene <= 8) {
-      console.log('scenedata scene number', this.sceneData.scene);
+    console.log('scenedata scene number', this.sceneData.scene);
+    if (this.sceneData.scene < 8) {
       // populate scene with fragments with their story activation buttons
       this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
         const fragmentText = new Text(fragment.text, ScenesConfig.fragmentStyle);
         fragmentText.position.set(fragment.position[0], fragment.position[1]);
         fragmentText.alpha = 0;
-
         this.addChild(fragmentText);
         this.createStoryButton(i, fragment, fragmentText);
       });
@@ -99,20 +98,20 @@ export class BaseScene extends Container implements IScene {
     this.buttonsContainer.addChild(storyButton);
   }
 
-  activateFragment(fragment: FragmentData, fragText: Text) {
+  activateFragment(fragment: FragmentData, fragText: Text, duration = 1) {
     gsap.to(fragText, {
       pixi: { alpha: 1 },
-      duration: 1,
+      duration: duration,
     });
     if (fragment.sounds) {
         fragment.sounds.forEach(s => sound.play(s));
     }
   }
 
-  deactivateFragment(fragment: FragmentData, fragText: Text) {
+  deactivateFragment(fragment: FragmentData, fragText: Text, duration = 1) {
     gsap.to(fragText, {
       pixi: { alpha: 0 },
-      duration: 1,
+      duration: duration,
     });
   }
 

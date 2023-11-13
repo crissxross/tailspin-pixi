@@ -6,6 +6,7 @@ import { BaseScene } from './base-scene';
 import { Scene7 } from './scene7';
 import { SceneManager } from '../shared/scene-manager';
 import { Scene1 } from './scene1';
+import { ScenesConfig } from '../config/scenesConfig';
 
 // THIS IS THE ENDING SCENE
 
@@ -16,7 +17,8 @@ export class Scene8 extends BaseScene {
   sky: Sprite;
   explosion: AnimatedSprite;
   explosionTextures: Texture[] = [];
-  text!: Text;
+  fragText!: Text;
+  uiText!: Text;
 
   constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any, previousScene?: any) {
     super(parentWidth, parentHeight, scIndex, nextScene, previousScene);
@@ -37,45 +39,33 @@ export class Scene8 extends BaseScene {
     // test/demo content
     this.addSky(parentWidth, parentHeight);
     this.addExplosion(parentWidth, parentHeight);
-    this.addText(parentWidth, parentHeight);
+    this.addUiText(parentWidth, parentHeight);
+
     // real content
+    this.addFragText(parentWidth, parentHeight);
+
+    // TODO: temporary, this is unnecessary
     this.addSceneData();
 
-    this.addStoryBtnAnimation();
     // quick nav button
     if (this.previousSceneIndex !== undefined){
       this.uiPrevious(this.previousScene, this.previousSceneIndex, parentHeight);
     }
   }
 
-  addStoryBtnAnimation() {
-    this.sceneData.fragments.forEach((fragment: FragmentData, i: number) => {
-      const animation = this.assignAnimation(fragment.id);
-      this.storyButtons[i].on('pointerenter', () => {
-        if (animation) this.activateFragmentAnimation(animation);
-      });
+  addFragText(parentWidth: number, parentHeight: number) {
+    this.fragText = new Text(this.sceneData.fragments[0].text, ScenesConfig.fragmentStyle);
+    this.fragText.anchor.set(0.5);
+    this.fragText.position.x = parentWidth * 0.5;
+    this.fragText.position.y = parentHeight * 0.3;
+    this.fragText.alpha = 0;
+    this.animContainer.addChild(this.fragText);
+    gsap.to(this.fragText, {
+        pixi: { alpha: 1 },
+        duration: 5,
     });
   }
 
-  assignAnimation(fragId: string) {
-    switch (fragId) {
-      // case '??':
-      //   return ??;
-      // case '??':
-      //   return ??;
-      default:
-        return null;
-    }
-  }
-
-  activateFragmentAnimation(animation: any) {
-    gsap.to(animation, {
-      pixi: { alpha: 1 },
-      duration: 2,
-    });
-    // play the AnimatedSprite
-    animation.play();
-  }
 
   // test/demo content -------------------------------------
 
@@ -103,7 +93,7 @@ addExplosion(parentWidth: number, parentHeight: number) {
     this.explosion.play();
 }
 
-addText(parentWidth: number, parentHeight: number) {
+addUiText(parentWidth: number, parentHeight: number) {
     const style = new TextStyle({
         fontFamily: "system-ui",
         fontSize: 30,
@@ -122,20 +112,20 @@ addText(parentWidth: number, parentHeight: number) {
         dropShadowDistance: 2,
     });
 
-    this.text = new Text(`
+    this.uiText = new Text(`
     Scene 8... END.
     Click to go back to the first scene.`,
     style,
     );
 
-    this.text.anchor.set(0.5);
-    this.text.position.x = parentWidth * 0.5;
-    this.text.position.y = parentHeight * 0.5;
-    this.text.eventMode = 'static';
-    this.text.cursor = 'pointer';
-    this.text.on('pointerdown', () => { SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, Scene1)); });
+    this.uiText.anchor.set(0.5);
+    this.uiText.position.x = parentWidth * 0.5;
+    this.uiText.position.y = parentHeight * 0.5;
+    this.uiText.eventMode = 'static';
+    this.uiText.cursor = 'pointer';
+    this.uiText.on('pointerdown', () => { SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, Scene1)); });
 
-    this.addChild(this.text);
+    this.addChild(this.uiText);
   }
 
 }
