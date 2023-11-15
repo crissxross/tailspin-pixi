@@ -16,16 +16,18 @@ export const manifest: AssetsManifest = {
             }
         },
         {
-            name: "game-scene1",
+            name: "scene1",
             assets: {
                 "storytext": "assets/tailspinScenes.json",
                 "innerEar": "assets/innerEar@2x.png",
                 "animalcrossing": "assets/spritesheets/animalcrossing.json",
                 "tinkling-chimes": "assets/sounds/TinklingChimes.mp3",
+                "cutleryonplates2": "assets/sounds/cutleryonplates2.mp3",
+                "waves-hiSoft1": "assets/sounds/waves-hiSoft1.mp3",
             }
         },
         {
-            name: "game-scene2",
+            name: "scene2",
             assets: {
                 "storytext": "assets/tailspinScenes.json",
                 "sky" : "assets/sky.png",

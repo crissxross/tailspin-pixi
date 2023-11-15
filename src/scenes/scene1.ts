@@ -1,4 +1,5 @@
 import { AnimatedSprite, Sprite, Texture } from 'pixi.js';
+import { Sound, sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { FragmentData } from '../shared/story-model';
 import { BaseScene } from './base-scene';
@@ -37,6 +38,7 @@ export class Scene1 extends BaseScene {
         this.purrlTextures.push(texture)
     }
     this.purrl = new AnimatedSprite(this.purrlTextures);
+    // this.cutlery = "cutleryonplates2";
   }
 
   init(parentWidth: number, parentHeight: number) {
@@ -54,6 +56,21 @@ export class Scene1 extends BaseScene {
     if (this.nextSceneIndex !== undefined){
       this.uiNext(this.nextScene, this.nextSceneIndex, parentWidth, parentHeight);
     }
+
+    // sounds
+    this.playSound({
+      soundName: "waves-hiSoft1",
+      loop: true,
+      volume: 0.1
+    });
+
+    this.playSoundWithFadeOut({
+      soundName: "cutleryonplates2",
+      loop: true,
+      volume: 0.1,
+      fadeDuration: 3,
+      delay: 6000,
+    });
   }
 
   addStoryBtnAnimation() {
@@ -91,6 +108,14 @@ export class Scene1 extends BaseScene {
 
   // TODO: check that all animations have a finite length and will play through to their end (or end of scene). If not, add:
   // deactivateFragmentAnimation(animation: any) {}
+
+  // playSound(soundName: string, loop = true, volume: number) {
+  //   sound.play(soundName, {loop: loop, volume: volume});
+  // }
+
+  // stopSound(soundName: string) {
+  //   sound.stop(soundName);
+  // }
 
 
   // SCENE SPECIFIC artwork & animation
