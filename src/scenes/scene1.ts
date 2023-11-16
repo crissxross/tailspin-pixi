@@ -1,5 +1,5 @@
 import { AnimatedSprite, Sprite, Texture } from 'pixi.js';
-import { Sound, sound } from "@pixi/sound";
+import { IMediaInstance, sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { FragmentData } from '../shared/story-model';
 import { BaseScene } from './base-scene';
@@ -15,6 +15,7 @@ export class Scene1 extends BaseScene {
   purrl: AnimatedSprite;
   purrlTextures: Texture[] = [];
   nextScene = Scene2;
+  tiniwaves!: IMediaInstance | Promise<IMediaInstance>;
 
   constructor(parentWidth: number, parentHeight: number, scIndex: number, nextScene: any) {
     super(parentWidth, parentHeight, scIndex, nextScene);
@@ -57,20 +58,7 @@ export class Scene1 extends BaseScene {
       this.uiNext(this.nextScene, this.nextSceneIndex, parentWidth, parentHeight);
     }
 
-    // sounds
-    this.playSound({
-      soundName: "waves-hiSoft1",
-      loop: true,
-      volume: 0.1
-    });
-
-    this.playSoundWithFadeOut({
-      soundName: "cutleryonplates2",
-      loop: true,
-      volume: 0.1,
-      fadeDuration: 3,
-      delay: 6000,
-    });
+    this.activateSoundScape();
   }
 
   addStoryBtnAnimation() {
@@ -109,14 +97,56 @@ export class Scene1 extends BaseScene {
   // TODO: check that all animations have a finite length and will play through to their end (or end of scene). If not, add:
   // deactivateFragmentAnimation(animation: any) {}
 
-  // playSound(soundName: string, loop = true, volume: number) {
-  //   sound.play(soundName, {loop: loop, volume: volume});
-  // }
+  // SOUNDS
+  activateSoundScape() {
+    // tiniwaves (waves-hiSoft1) will/should play througout Tailspin (unless I stop it)
+    this.tiniwaves = this.playSound({
+      soundName: "waves-hiSoft1",
+      loop: true,
+      volume: 0.1
+    });
 
-  // stopSound(soundName: string) {
-  //   sound.stop(soundName);
-  // }
+    // TODO: JUST TESTING SOUND STUFF - remove...
+    setTimeout(() => {
+      gsap.to(this.tiniwaves, {
+        volume: 0,
+        duration: 3,
+      });
+    }, 8000);
 
+    setTimeout(() => {
+      gsap.to(this.tiniwaves, {
+        volume: 1,
+        duration: 3,
+      });
+    }, 12000);
+
+    setTimeout(() => {
+      // play a second instance of the sound
+      this.playSound({
+        soundName: "waves-hiSoft1",
+        loop: true,
+        volume: 0.1
+      });
+      console.log('waves-hiSoft1', sound.find("waves-hiSoft1"));
+    }, 15000);
+
+    setTimeout(() => {
+      // stops all instances of the sound
+      this.stopSound("waves-hiSoft1");
+      console.log('waves-hiSoft1', sound.find("waves-hiSoft1"));
+    }, 25000);
+    // END OF TESTING SOUND STUFF
+
+    // play in this scene only
+    this.playSoundWithFadeOut({
+      soundName: "cutleryonplates2",
+      loop: true,
+      volume: 0.1,
+      fadeDuration: 3,
+      delay: 6000,
+    });
+  }
 
   // SCENE SPECIFIC artwork & animation
 

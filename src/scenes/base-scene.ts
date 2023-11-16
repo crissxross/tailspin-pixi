@@ -1,5 +1,5 @@
 import { Assets, Container, DisplayObject, Graphics, Text } from 'pixi.js';
-import { Sound, sound } from "@pixi/sound";
+import { sound } from "@pixi/sound";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { IScene, SceneManager } from '../shared/scene-manager';
@@ -117,11 +117,7 @@ export class BaseScene extends Container implements IScene {
   }
 
   playSound(options: SoundOptions) {
-    sound.play(options.soundName, {loop: options.loop, volume: options.volume});
-  }
-
-  stopSound(soundName: string) {
-    sound.stop(soundName);
+    return sound.play(options.soundName, {loop: options.loop, volume: options.volume});
   }
 
   playSoundWithFadeOut(options: SoundOptions) {
@@ -132,6 +128,10 @@ export class BaseScene extends Container implements IScene {
         duration: options.fadeDuration,
       });
     }, options.delay);
+  }
+
+  stopSound(soundName: string) {
+    sound.stop(soundName);
   }
 
   checkAllVisited(visitedFragments: number[], index: number, sceneData: StoryScene) {
