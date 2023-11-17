@@ -1,16 +1,24 @@
-import { Container, Assets, utils } from 'pixi.js'
+import { Container, Assets, utils, Graphics, DisplayObject } from 'pixi.js'
 // import { LoadingBarContainer } from '../containers/loading-bar-container';
 import { SceneManager, IScene } from '../shared/scene-manager';
 import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
 import { manifest } from '../config/manifest';
 import { Scene1 } from './scene1';
 // next scene
 import { Scene2 } from './scene2';
 
+gsap.registerPlugin(PixiPlugin);
+
+PixiPlugin.registerPIXI({
+    DisplayObject: DisplayObject,
+});
+
 // TODO: commented out _loadingBar stuff because it's buggy. Using a simple CSS loading spinner instead
 
 export class LoaderScene extends Container implements IScene {
     // private _loadingBar: LoadingBarContainer;
+    startButton!: Graphics;
 
     constructor() {
         super();
@@ -39,12 +47,43 @@ export class LoaderScene extends Container implements IScene {
     }
 
     private loaded(): void {
-        // SceneManager.changeScene(new GameScene1(SceneManager.width, SceneManager.height));
-        SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, Scene2));
+        gsap.to('.loader', {duration: 0.3, autoAlpha: 0, ease: "power2.out"});
+        this.addStartButton();
+        // SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, Scene2));
+    }
 
-        const tl = gsap.timeline({onComplete: this.removeStuff});
-        tl.to('.game-title', {duration: 1, autoAlpha: 0, ease: "power2.out"});
-        tl.to('.loader', {duration: 0.3, autoAlpha: 0, ease: "power2.out"}, "<");
+    // TODO: turn this into a button container so that I can add text to it
+    addStartButton(): void {
+        this.startButton = new Graphics()
+            .beginFill('hsl(204 30% 70% / 0.6)')
+            .drawRoundedRect(0, 0, 200, 100, 30)
+            .endFill();
+        this.startButton.position.set(SceneManager.width * 0.5 - 100, SceneManager.height * 0.75 - 50);
+        this.startButton.eventMode = 'static';
+        this.startButton.cursor = 'pointer';
+        this.startButton.on('pointerdown', () => {
+            this.fadeOutTitleView();
+        });
+        this.addChild(this.startButton);
+    }
+
+    fadeOutTitleView(): void {
+        const tl = gsap.timeline({onComplete: this.goToFirstScene.bind(this)});
+        tl.to('.game-title', {
+            autoAlpha: 0,
+            duration: 1,
+            ease: "power2.out"
+        });
+        tl.to(this.startButton, {
+            pixi: { alpha: 0 },
+            duration: 0.3,
+            ease: "power2.out"
+        }, '<');
+    }
+
+    goToFirstScene(): void {
+        SceneManager.changeScene(new Scene1(SceneManager.width, SceneManager.height, 0, Scene2));
+        this.removeStuff();
     }
 
     removeStuff(): void {

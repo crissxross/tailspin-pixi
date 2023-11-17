@@ -100,43 +100,14 @@ export class Scene1 extends BaseScene {
   // SOUNDS
   activateSoundScape() {
     // tiniwaves (waves-hiSoft1) will/should play througout Tailspin (unless I stop it)
-    this.tiniwaves = this.playSound({
-      soundName: "waves-hiSoft1",
-      loop: true,
-      volume: 0.1
-    });
-
-    // TODO: JUST TESTING SOUND STUFF - remove...
-    setTimeout(() => {
-      gsap.to(this.tiniwaves, {
-        volume: 0,
-        duration: 3,
-      });
-    }, 8000);
-
-    setTimeout(() => {
-      gsap.to(this.tiniwaves, {
-        volume: 1,
-        duration: 3,
-      });
-    }, 12000);
-
-    setTimeout(() => {
-      // play a second instance of the sound
-      this.playSound({
+    // play waves-hiSoft1 if not already playing
+    if (!sound.find("waves-hiSoft1").isPlaying) {
+      this.tiniwaves = this.playSound({
         soundName: "waves-hiSoft1",
         loop: true,
         volume: 0.1
       });
-      console.log('waves-hiSoft1', sound.find("waves-hiSoft1"));
-    }, 15000);
-
-    setTimeout(() => {
-      // stops all instances of the sound
-      this.stopSound("waves-hiSoft1");
-      console.log('waves-hiSoft1', sound.find("waves-hiSoft1"));
-    }, 25000);
-    // END OF TESTING SOUND STUFF
+    }
 
     // play in this scene only
     this.playSoundWithFadeOut({
@@ -144,7 +115,7 @@ export class Scene1 extends BaseScene {
       loop: true,
       volume: 0.1,
       fadeDuration: 3,
-      delay: 6000,
+      delay: 9000,
     });
   }
 
