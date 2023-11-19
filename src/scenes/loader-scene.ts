@@ -1,9 +1,10 @@
-import { Container, Assets, utils, Graphics, DisplayObject } from 'pixi.js'
+import { Container, Assets, utils, Graphics, DisplayObject, Text } from 'pixi.js'
 // import { LoadingBarContainer } from '../containers/loading-bar-container';
 import { SceneManager, IScene } from '../shared/scene-manager';
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { manifest } from '../config/manifest';
+import { ScenesConfig, buttonStyle } from '../config/scenesConfig';
 import { Scene1 } from './scene1';
 // next scene
 import { Scene2 } from './scene2';
@@ -18,7 +19,7 @@ PixiPlugin.registerPIXI({
 
 export class LoaderScene extends Container implements IScene {
     // private _loadingBar: LoadingBarContainer;
-    startButton!: Graphics;
+    startButton!: Container;
 
     constructor() {
         super();
@@ -54,16 +55,23 @@ export class LoaderScene extends Container implements IScene {
 
     // TODO: turn this into a button container so that I can add text to it
     addStartButton(): void {
-        this.startButton = new Graphics()
-            .beginFill('hsl(204 30% 70% / 0.6)')
-            .drawRoundedRect(0, 0, 200, 100, 30)
+        this.startButton = new Container();
+        const buttonBg = new Graphics()
+            .beginFill('hsl(204 30% 70% / 0.5)')
+            .drawRoundedRect(0, 0, 155, 70, 25)
             .endFill();
+        // TODO: why is this causing red squigglies when it works?
+        const text = new Text('START', ScenesConfig.buttonStyle);
+        // const text = new Text('START', buttonStyle);
+        text.anchor.set(0.5);
+        text.position.set(buttonBg.width * 0.5, buttonBg.height * 0.5);
         this.startButton.position.set(SceneManager.width * 0.5 - 100, SceneManager.height * 0.75 - 50);
         this.startButton.eventMode = 'static';
         this.startButton.cursor = 'pointer';
         this.startButton.on('pointerdown', () => {
             this.fadeOutTitleView();
         });
+        this.startButton.addChild(buttonBg, text);
         this.addChild(this.startButton);
     }
 
